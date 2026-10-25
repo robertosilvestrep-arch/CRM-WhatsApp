@@ -160,7 +160,12 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:12px 9px
 
 <script>
 const KEY='crm_whatsapp_contacts_v1', HIST='crm_whatsapp_history_v1', SENTKEY='crm_whatsapp_sent_database_v1';
-let contacts=JSON.parse(localStorage.getItem(KEY)||'[]').map(c=>({...c,source:c.source||'',consent:c.consent||'pending'}));
+let contacts=JSON.parse(localStorage.getItem(KEY)||'[]').map((c,i)=>({
+ ...c,
+ id:(c.id!==undefined&&c.id!==null&&String(c.id)!=='')?String(c.id):('legacy_'+i+'_'+Date.now()),
+ source:c.source||'',
+ consent:c.consent||'pending'
+}));
 let history=JSON.parse(localStorage.getItem(HIST)||'[]');
 let sentDatabase=JSON.parse(localStorage.getItem(SENTKEY)||'[]');
 let editingId=null, campaignQueue=[], queueIndex=0;
@@ -190,7 +195,7 @@ function renderContacts(){
  const tag=document.getElementById('tagFilter')?.value||'';
  const list=contacts.filter(c=>(!q||(c.name+' '+c.phone+' '+c.company).toLowerCase().includes(q))&&(!tag||(c.tag||'').split(',').map(x=>x.trim()).includes(tag)));
  const body=document.getElementById('contactsBody');
- body.innerHTML=list.length?list.map(c=>`<tr><td><b>${esc(c.name)}</b><br><span class="muted">${esc(c.note||'')}</span></td><td>${esc(c.phone)}</td><td>${esc(c.source||'')}</td><td>${(c.tag||'').split(',').filter(Boolean).map(t=>`<span class="tag">${esc(t.trim())}</span>`).join('')}</td><td><div class="actions"><button class="btn primary" onclick="quickWhats('${c.id}')">WhatsApp</button><button class="btn secondary" onclick="editContact('${c.id}')">Editar</button><button class="btn danger" onclick="deleteContact('${c.id}')">Excluir</button></div></td></tr>`).join(''):'<tr><td colspan="5" class="empty">Nenhum contato encontrado.</td></tr>';
+ body.innerHTML=list.length?list.map(c=>{const cid=String(c.id);return `<tr><td><b>${esc(c.name)}</b><br><span class="muted">${esc(c.note||'')}</span></td><td>${esc(c.phone)}</td><td>${esc(c.source||'')}</td><td>${(c.tag||'').split(',').filter(Boolean).map(t=>`<span class="tag">${esc(t.trim())}</span>`).join('')}</td><td><div class="actions"><button class="btn primary" onclick='quickWhatsById(${JSON.stringify(cid)})'>WhatsApp</button><button class="btn secondary" onclick='editContactById(${JSON.stringify(cid)})'>Editar</button><button class="btn danger" onclick='deleteContactById(${JSON.stringify(cid)})'>Excluir</button></div></td></tr>`}).join(''):'<tr><td colspan="5" class="empty">Nenhum contato encontrado.</td></tr>';
 }
 function openContactForm(id=null){
  editingId=id;
@@ -223,6 +228,10 @@ function saveContact(){
 }
  closeContactForm();saveData();
 }
+function findContactById(id){return contacts.find(x=>String(x.id)===String(id))}
+function editContactById(id){const c=findContactById(id);if(!c){alert('Contato não encontrado. Importe novamente ou atualize a lista.');return}openContactForm(String(c.id))}
+function deleteContactById(id){const c=findContactById(id);if(!c)return;if(confirm('Excluir '+(c.name||'este contato')+'?')){contacts=contacts.filter(x=>String(x.id)!==String(id));saveData()}}
+function quickWhatsById(id){const c=findContactById(id);if(c)quickWhats(c.id)}
 function editContact(id){openContactForm(id)}
 function deleteContact(id){if(confirm('Excluir este contato?')){contacts=contacts.filter(c=>c.id!==id);saveData()}}
 function quickWhats(id){
@@ -388,7 +397,13 @@ function importCSVFile(file,forcedSource){
    const name=(ni>=0?cols[ni]:'Sem nome')||'Sem nome', source=forcedSource || (si>=0?cols[si]:'') || (gi>=0?cols[gi]:'') || file.name.replace(/\.[^.]+$/,'');
    const existing=contacts.find(c=>normPhone(c.phone)===phone);
    const data={name,phone,company:ci>=0?(cols[ci]||''):'',tag:ti>=0?(cols[ti]||''):'',source,note:'',consent:existing?.consent||'pending'};
-   if(existing){Object.assign(existing,data);updated++}else{data.id=crypto.randomUUID();contacts.push(data);added++}
+   if(existing){
+   if(existing.id===undefined||existing.id===null||String(existing.id)==='')existing.id='import_'+Date.now()+'_'+i+'_'+Math.random().toString(36).slice(2);
+   Object.assign(existing,data);updated++;
+  }else{
+   data.id=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():'import_'+Date.now()+'_'+i+'_'+Math.random().toString(36).slice(2);
+   contacts.push(data);added++;
+  }
   }
   saveData();renderSources();renderConsent();alert(`${added} novo(s) e ${updated} atualizado(s). Origem: ${forcedSource||file.name}`);
  };
