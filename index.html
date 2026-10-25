@@ -63,6 +63,8 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:12px 9px
 <input class="search" id="contactSearch" placeholder="Pesquisar nome ou telefone..." oninput="renderContacts()">
 <select id="tagFilter" onchange="renderContacts()"><option value="">Todas as tags</option></select>
 <button class="btn primary" onclick="openContactForm()">+ Novo contato</button>
+<button class="btn secondary" type="button" onclick="toggleContactSelection()">Selecionar contatos</button>
+<button class="btn danger" type="button" onclick="deleteAllContacts()">Apagar todos</button>
 <label class="btn secondary" style="margin:0;cursor:pointer">Importar CSV<input id="csvInput" type="file" accept=".csv,text/csv" style="display:none" onchange="importCSV(event)"></label>
 <button class="btn secondary" onclick="downloadCSV()">Exportar CSV</button>
 </div>
@@ -78,7 +80,12 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:12px 9px
 <button class="btn primary" onclick="saveContact()">Salvar</button>
 <button class="btn secondary" onclick="closeContactForm()">Cancelar</button>
 </div>
-<div style="overflow:auto"><table><thead><tr><th>Nome</th><th>WhatsApp</th><th>Origem</th><th>Tag</th><th>Ações</th></tr></thead><tbody id="contactsBody"></tbody></table></div>
+<div style="overflow:auto"><div id="bulkContactTools" class="notice" style="display:none;margin-bottom:12px">
+<label style="display:inline-flex;gap:8px;align-items:center;font-weight:600"><input type="checkbox" id="selectVisibleContacts" onchange="selectAllVisibleContacts(this.checked)"> Selecionar todos os contatos visíveis</label>
+<span id="selectedContactCount" style="margin:0 12px">0 selecionados</span>
+<button class="btn danger" type="button" onclick="deleteSelectedContacts()">Apagar selecionados</button>
+</div>
+<table><thead><tr><th class="bulk-select-cell" style="display:none">Selecionar</th><th>Nome</th><th>WhatsApp</th><th>Origem</th><th>Tag</th><th>Ações</th></tr></thead><tbody id="contactsBody"></tbody></table></div>
 </div>
 </section>
 
@@ -169,6 +176,8 @@ let contacts=JSON.parse(localStorage.getItem(KEY)||'[]').map((c,i)=>({
 let history=JSON.parse(localStorage.getItem(HIST)||'[]');
 let sentDatabase=JSON.parse(localStorage.getItem(SENTKEY)||'[]');
 let editingId=null, campaignQueue=[], queueIndex=0;
+let selectedContactIds=new Set();
+normalizeContactIds();
 let campaignProgress=JSON.parse(localStorage.getItem('crm_whatsapp_campaign_progress_v1')||'null')||{active:false,items:[],currentIndex:0,openedId:null};
 
 function saveData(){localStorage.setItem(KEY,JSON.stringify(contacts));localStorage.setItem(HIST,JSON.stringify(history));localStorage.setItem(SENTKEY,JSON.stringify(sentDatabase));updateStats();populateTags();renderContacts();renderHistory();renderSentDatabase();updateAudience();}
@@ -195,14 +204,14 @@ function renderContacts(){
  const tag=document.getElementById('tagFilter')?.value||'';
  const list=contacts.filter(c=>(!q||(c.name+' '+c.phone+' '+c.company).toLowerCase().includes(q))&&(!tag||(c.tag||'').split(',').map(x=>x.trim()).includes(tag)));
  const body=document.getElementById('contactsBody');
- body.innerHTML=list.length?list.map(c=>{const cid=String(c.id);return `<tr><td><b>${esc(c.name)}</b><br><span class="muted">${esc(c.note||'')}</span></td><td>${esc(c.phone)}</td><td>${esc(c.source||'')}</td><td>${(c.tag||'').split(',').filter(Boolean).map(t=>`<span class="tag">${esc(t.trim())}</span>`).join('')}</td><td><div class="actions"><button class="btn primary" onclick='quickWhatsById(${JSON.stringify(cid)})'>WhatsApp</button><button class="btn secondary" onclick='editContactById(${JSON.stringify(cid)})'>Editar</button><button class="btn danger" onclick='deleteContactById(${JSON.stringify(cid)})'>Excluir</button></div></td></tr>`}).join(''):'<tr><td colspan="5" class="empty">Nenhum contato encontrado.</td></tr>';
+ body.innerHTML=list.length?list.map(c=>`<tr><td class="bulk-select-cell" style="display:${window.contactSelectionMode?'table-cell':'none'}"><input type="checkbox" class="contact-row-select" data-select-id="${esc(String(c.id))}" ${selectedContactIds.has(String(c.id))?'checked':''} onchange="setContactSelected(this.dataset.selectId,this.checked)"></td><td><b>${esc(c.name)}</b><br><span class="muted">${esc(c.note||'')}</span></td><td>${esc(c.phone)}</td><td>${esc(c.source||'')}</td><td>${(c.tag||'').split(',').filter(Boolean).map(t=>`<span class="tag">${esc(t.trim())}</span>`).join('')}</td><td><div class="actions"><button type="button" class="btn primary" data-contact-action="whatsapp" data-contact-id="${esc(String(c.id))}">WhatsApp</button><button type="button" class="btn secondary" data-contact-action="edit" data-contact-id="${esc(String(c.id))}">Editar</button><button type="button" class="btn danger" data-contact-action="delete" data-contact-id="${esc(String(c.id))}">Excluir</button></div></td></tr>`).join(''):'<tr><td colspan="6" class="empty">Nenhum contato encontrado.</td></tr>';
 }
 function openContactForm(id=null){
  editingId=id;
  document.getElementById('contactForm').style.display='block';
  if(id){
  const c=contacts.find(x=>String(x.id)===String(id));
- if(!c){alert('Não encontrei esse contato para editar.');return}
+ if(!c){editingId=null;alert('Não encontrei esse contato pelo identificador. Atualize a página e tente novamente.');return}
  document.getElementById('cName').value=c.name||'';
  document.getElementById('cPhone').value=c.phone||'';
  document.getElementById('cCompany').value=c.company||'';
@@ -228,11 +237,53 @@ function saveContact(){
 }
  closeContactForm();saveData();
 }
+window.contactSelectionMode=false;
+function toggleContactSelection(){
+ window.contactSelectionMode=!window.contactSelectionMode;
+ const tools=document.getElementById('bulkContactTools');
+ if(tools)tools.style.display=window.contactSelectionMode?'block':'none';
+ document.querySelectorAll('.bulk-select-cell').forEach(el=>el.style.display=window.contactSelectionMode?'table-cell':'none');
+ if(!window.contactSelectionMode){selectedContactIds.clear();const all=document.getElementById('selectVisibleContacts');if(all)all.checked=false;}
+ renderContacts();updateSelectedCount();
+}
+function setContactSelected(id,checked){id=String(id);if(checked)selectedContactIds.add(id);else selectedContactIds.delete(id);updateSelectedCount();}
+function selectAllVisibleContacts(checked){
+ document.querySelectorAll('#contactsBody .contact-row-select').forEach(cb=>{cb.checked=checked;setContactSelected(cb.dataset.selectId,checked)});
+}
+function updateSelectedCount(){
+ const el=document.getElementById('selectedContactCount');if(el)el.textContent=selectedContactIds.size+' selecionado(s)';
+}
+function deleteSelectedContacts(){
+ const ids=[...selectedContactIds];if(!ids.length){alert('Selecione pelo menos um contato.');return}
+ if(!confirm('Apagar '+ids.length+' contato(s) selecionado(s)? Esta ação não pode ser desfeita.'))return;
+ contacts=contacts.filter(c=>!ids.includes(String(c.id)));ids.forEach(id=>selectedContactIds.delete(id));
+ saveData();renderSources();renderConsent();renderContacts();updateSelectedCount();
+}
+function deleteAllContacts(){
+ if(!contacts.length){alert('Não há contatos para apagar.');return}
+ const typed=prompt('Isso apagará TODOS os '+contacts.length+' contatos do CRM. Para confirmar, digite APAGAR TUDO:');
+ if(typed!=='APAGAR TUDO'){alert('Ação cancelada.');return}
+ contacts=[];selectedContactIds.clear();saveData();renderSources();renderConsent();renderContacts();updateSelectedCount();
+}
 function findContactById(id){return contacts.find(x=>String(x.id)===String(id))}
+function normalizeContactIds(){
+ let changed=false;
+ contacts.forEach((c,i)=>{if(c.id===undefined||c.id===null||String(c.id)===''||String(c.id)==='undefined'||String(c.id)==='null'){c.id='migrated_'+Date.now()+'_'+i+'_'+Math.random().toString(36).slice(2);changed=true;}});
+ if(changed)localStorage.setItem(KEY,JSON.stringify(contacts));
+}
 function editContactById(id){const c=findContactById(id);if(!c){alert('Contato não encontrado. Importe novamente ou atualize a lista.');return}openContactForm(String(c.id))}
 function deleteContactById(id){const c=findContactById(id);if(!c)return;if(confirm('Excluir '+(c.name||'este contato')+'?')){contacts=contacts.filter(x=>String(x.id)!==String(id));saveData()}}
 function quickWhatsById(id){const c=findContactById(id);if(c)quickWhats(c.id)}
-function editContact(id){openContactForm(id)}
+function editContact(id){openContactForm(String(id))}
+document.addEventListener('click',function(ev){
+ const btn=ev.target.closest('[data-contact-action]');
+ if(!btn)return;
+ const id=btn.getAttribute('data-contact-id');
+ const action=btn.getAttribute('data-contact-action');
+ if(action==='edit')editContactById(id);
+ else if(action==='delete')deleteContactById(id);
+ else if(action==='whatsapp')quickWhatsById(id);
+});
 function deleteContact(id){if(confirm('Excluir este contato?')){contacts=contacts.filter(c=>c.id!==id);saveData()}}
 function quickWhats(id){
  const c=contacts.find(x=>x.id===id); const msg='Olá '+c.name+'!';
@@ -398,7 +449,7 @@ function importCSVFile(file,forcedSource){
    const existing=contacts.find(c=>normPhone(c.phone)===phone);
    const data={name,phone,company:ci>=0?(cols[ci]||''):'',tag:ti>=0?(cols[ti]||''):'',source,note:'',consent:existing?.consent||'pending'};
    if(existing){
-   if(existing.id===undefined||existing.id===null||String(existing.id)==='')existing.id='import_'+Date.now()+'_'+i+'_'+Math.random().toString(36).slice(2);
+   if(existing.id===undefined||existing.id===null||String(existing.id)===''||String(existing.id)==='undefined'||String(existing.id)==='null')existing.id='import_'+Date.now()+'_'+i+'_'+Math.random().toString(36).slice(2);
    Object.assign(existing,data);updated++;
   }else{
    data.id=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():'import_'+Date.now()+'_'+i+'_'+Math.random().toString(36).slice(2);
@@ -415,7 +466,7 @@ function downloadCSV(){
  const csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');
  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download='contatos_crm_whatsapp.csv';a.click();
 }
-saveData();renderSources();renderConsent();updateCampaignMode();updateCampaignType();updatePreview();renderProgress();renderSentDatabase();
+normalizeContactIds();saveData();renderSources();renderConsent();updateCampaignMode();updateCampaignType();updatePreview();renderProgress();renderSentDatabase();
 </script>
 </body>
 </html>
