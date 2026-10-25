@@ -146,6 +146,7 @@ const KEY='crm_whatsapp_contacts_v1', HIST='crm_whatsapp_history_v1';
 let contacts=JSON.parse(localStorage.getItem(KEY)||'[]').map(c=>({...c,source:c.source||'',consent:c.consent||'pending'}));
 let history=JSON.parse(localStorage.getItem(HIST)||'[]');
 let editingId=null, campaignQueue=[], queueIndex=0;
+let campaignProgress={active:false,items:[],currentIndex:0,openedId:null};
 
 function saveData(){localStorage.setItem(KEY,JSON.stringify(contacts));localStorage.setItem(HIST,JSON.stringify(history));updateStats();populateTags();renderContacts();renderHistory();updateAudience();}
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
@@ -267,57 +268,49 @@ function openCampaign(){
  const type=document.getElementById('campaignType').value;
  if(type==='marketing') campaignQueue=campaignCandidates();
  else {
-   const mode=document.getElementById('campaignMode').value;
-   const tag=document.getElementById('campaignTag').value, source=document.getElementById('campaignSource').value;
-   campaignQueue=contacts.filter(c=>(mode==='manual'?[...document.querySelectorAll('.manualContact:checked')].map(x=>x.value).includes(c.id):true)
-     &&(mode!=='tag'||(c.tag||'').split(',').map(x=>x.trim()).includes(tag))
-     &&(mode!=='source'||(c.source||'')===source))
-     .filter(c=>normPhone(c.phone).length>=10);
+  const mode=document.getElementById('campaignMode').value,tag=document.getElementById('campaignTag').value,source=document.getElementById('campaignSource').value;
+  const ids=mode==='manual'?[...document.querySelectorAll('.manualContact:checked')].map(x=>x.value):null;
+  campaignQueue=contacts.filter(c=>(!ids||ids.includes(c.id))&&(mode!=='tag'||(c.tag||'').split(',').map(x=>x.trim()).includes(tag))&&(mode!=='source'||(c.source||'')===source)).filter(c=>normPhone(c.phone).length>=10);
  }
  if(!campaignQueue.length){alert('Nenhum contato válido nessa seleção.');return}
- queueIndex=0;openNextCampaign();
+ campaignProgress={active:true,items:campaignQueue.map(c=>({id:c.id,name:c.name,phone:c.phone,status:'Pendente'})),currentIndex:0,openedId:null};
+ renderProgress();openCurrentCampaignContact();
 }
-function openNextCampaign(){
- if(queueIndex>=campaignQueue.length){alert('Todos os contatos selecionados foram abertos.');return}
- const c=campaignQueue[queueIndex++],m=personalize(document.getElementById('campaignMessage').value,c);
- openWhats(c,m);
- setTimeout(()=>{if(queueIndex<campaignQueue.length&&confirm('Próximo contato: '+campaignQueue[queueIndex].name+'\\nAbrir agora?'))openNextCampaign()},500);
+function openCurrentCampaignContact(){
+ if(!campaignProgress.active)return;
+ const i=campaignProgress.items.findIndex(x=>x.status==='Pendente');
+ if(i<0){campaignProgress.active=false;campaignProgress.openedId=null;renderProgress();alert('Lista concluída. Confira enviados confirmados, pulados e pendentes.');return}
+ campaignProgress.currentIndex=i;
+ const item=campaignProgress.items[i],c=contacts.find(x=>x.id===item.id);
+ if(!c){item.status='Contato removido';renderProgress();return}
+ const m=personalize(document.getElementById('campaignMessage').value,c);
+ item.status='Conversa aberta';campaignProgress.openedId=item.id;
+ history.unshift({date:new Date().toLocaleString('pt-BR'),contact:c.name,message:'[CONVERSA ABERTA] '+m});
+ saveData();renderProgress();
+ window.open('https://wa.me/'+normPhone(c.phone)+'?text='+encodeURIComponent(m),'_blank');
 }
-function setConsent(id,status){
- const c=contacts.find(x=>x.id===id); if(!c)return;
- c.consent=status; saveData(); renderConsent();
+function markCurrentSent(){
+ if(!campaignProgress.openedId){alert('Inicie uma campanha e abra uma conversa primeiro.');return}
+ const item=campaignProgress.items.find(x=>x.id===campaignProgress.openedId);if(!item)return;
+ item.status='Enviado (confirmado manualmente)';campaignProgress.openedId=null;
+ history.unshift({date:new Date().toLocaleString('pt-BR'),contact:item.name,message:'[ENVIO CONFIRMADO PELO USUÁRIO]'});
+ saveData();renderProgress();openCurrentCampaignContact();
 }
-function renderConsent(){
- const b=document.getElementById('consentBody');
- const counts={optin:0,pending:0,optout:0,noresponse:0};
- contacts.forEach(c=>counts[c.consent||'pending']=(counts[c.consent||'pending']||0)+1);
- document.getElementById('statOptIn').textContent=counts.optin||0;
- document.getElementById('statPending').textContent=counts.pending||0;
- document.getElementById('statOptOut').textContent=counts.optout||0;
- document.getElementById('statNoResponse').textContent=counts.noresponse||0;
- b.innerHTML=contacts.map(c=>`<tr><td>${esc(c.name)}<br><span class="muted">${esc(c.phone)}</span></td><td>${esc(c.source||'')}</td><td><span class="badge">${c.consent==='optin'?'AUTORIZADO':c.consent==='optout'?'NÃO AUTORIZOU':c.consent==='noresponse'?'SEM RESPOSTA':'AGUARDANDO'}</span></td><td class="actions"><button class="btn primary" onclick="setConsent('${c.id}','optin')">Autorizou</button><button class="btn danger" onclick="setConsent('${c.id}','optout')">Não autorizou</button><button class="btn secondary" onclick="setConsent('${c.id}','pending')">Aguardar</button></td></tr>`).join('')||'<tr><td colspan="4" class="empty">Nenhum contato.</td></tr>';
+function skipCurrent(){
+ if(!campaignProgress.openedId){alert('Não há contato aberto no controle da campanha.');return}
+ const item=campaignProgress.items.find(x=>x.id===campaignProgress.openedId);if(item)item.status='Pulado';
+ campaignProgress.openedId=null;renderProgress();openCurrentCampaignContact();
 }
-function renderSources(){
- const map={};
- contacts.forEach(c=>{const s=c.source||'Sem origem';map[s]=(map[s]||0)+1});
- document.getElementById('sourcesBody').innerHTML=Object.entries(map).sort((a,b)=>a[0].localeCompare(b[0])).map(([s,n])=>`<div class="card" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div><b>${esc(s)}</b><div class="muted">${n} contato(s)</div></div><button class="btn secondary" onclick="exportSource(${JSON.stringify(s)})">Exportar</button></div>`).join('')||'<div class="empty">Nenhuma origem cadastrada.</div>';
+function resetProgress(){
+ if(!confirm('Reiniciar o controle de progresso desta campanha?'))return;
+ campaignProgress={active:false,items:[],currentIndex:0,openedId:null};renderProgress();
 }
-function newSourceImport(){
- const input=document.createElement('input');input.type='file';input.accept='.csv,text/csv';
- input.onchange=ev=>{const f=ev.target.files[0];if(!f)return;const source=prompt('Nome do grupo/origem deste arquivo (ex.: Grupo Condomínio Jardim):',f.name.replace(/\.[^.]+$/,''));if(source===null)return;importCSVFile(f,source)};
- input.click();
+function renderProgress(){
+ const items=campaignProgress.items||[],sent=items.filter(x=>x.status==='Enviado (confirmado manualmente)').length,skipped=items.filter(x=>x.status==='Pulado').length,opened=items.filter(x=>x.status==='Conversa aberta').length,pending=items.filter(x=>x.status==='Pendente').length;
+ const pct=items.length?Math.round((sent+skipped)/items.length*100):0;
+ const summary=document.getElementById('progressSummary');if(summary)summary.textContent=items.length?`Total: ${items.length} · Enviados confirmados: ${sent} · Conversa aberta: ${opened} · Pulados: ${skipped} · Pendentes: ${pending}`:'Nenhuma campanha iniciada.';
+ const bar=document.getElementById('progressBar');if(bar)bar.style.width=pct+'%';
 }
-function exportSource(source){
- const list=contacts.filter(c=>(c.source||'Sem origem')===source);
- exportContactsList(list,source.replace(/[^\w\-]+/g,'_'));
-}
-function exportBySource(){renderSources();alert('Use Exportar ao lado de cada origem para gerar um CSV separado.')}
-function exportContactsList(list,name){
- const rows=[['nome','whatsapp','empresa','tag','origem','consentimento','observacao'],...list.map(c=>[c.name,c.phone,c.company,c.tag,c.source,c.consent,c.note])];
- const csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');
- const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download=(name||'contatos')+'.csv';a.click();
-}
-
 function renderHistory(){
  const b=document.getElementById('historyBody');b.innerHTML=history.length?history.slice(0,200).map(h=>`<tr><td>${esc(h.date)}</td><td>${esc(h.contact)}</td><td>${esc(h.message)}</td></tr>`).join(''):'<tr><td colspan="3" class="empty">Nenhuma ação registrada.</td></tr>';
 }
@@ -354,7 +347,7 @@ function downloadCSV(){
  const csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');
  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download='contatos_crm_whatsapp.csv';a.click();
 }
-saveData();renderSources();renderConsent();updateCampaignMode();updateCampaignType();updatePreview();
+saveData();renderSources();renderConsent();updateCampaignMode();updateCampaignType();updatePreview();renderProgress();
 </script>
 </body>
 </html>
