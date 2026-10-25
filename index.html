@@ -3,470 +3,1829 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CRM WhatsApp Grátis</title>
+<title>CRM WhatsApp Grátis - Profissional</title>
 <style>
-:root{--bg:#f4f6f8;--card:#fff;--text:#17202a;--muted:#68737d;--line:#e5e9ed;--green:#18a957;--green2:#0d8d47;--dark:#18232c;--danger:#d64545}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-.app{display:flex;min-height:100vh}.sidebar{width:235px;background:var(--dark);color:#fff;padding:22px 14px;position:fixed;top:0;bottom:0}
-.logo{font-size:20px;font-weight:800;padding:0 10px 25px}.logo span{color:#35d47a}
-.nav button{display:block;width:100%;border:0;background:transparent;color:#d9e1e6;text-align:left;padding:12px 14px;border-radius:8px;margin:4px 0;cursor:pointer;font-size:14px}
-.nav button.active,.nav button:hover{background:#25343f;color:#fff}.main{margin-left:235px;width:calc(100% - 235px);padding:28px;max-width:1500px}
-.page{display:none}.page.active{display:block}h1{margin:0 0 7px;font-size:26px}h2{font-size:18px;margin-top:0}.subtitle{color:var(--muted);margin-bottom:24px}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;box-shadow:0 2px 7px #00000008}.stat{font-size:28px;font-weight:800;margin:8px 0}.muted{color:var(--muted);font-size:13px}
-.panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px;margin-top:18px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
-input,select,textarea{border:1px solid #d8dee3;border-radius:8px;padding:10px 11px;font:inherit;background:#fff}input:focus,select:focus,textarea:focus{outline:2px solid #bcefd1;border-color:var(--green)}
-input.search{min-width:240px;flex:1}.btn{border:0;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer}.primary{background:var(--green);color:#fff}.primary:hover{background:var(--green2)}.secondary{background:#eef2f4;color:#26333c}.danger{background:#ffe9e9;color:#b72e2e}
-table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:12px 9px;border-bottom:1px solid var(--line);font-size:14px}th{color:var(--muted);font-size:12px;text-transform:uppercase}
-.tag{display:inline-block;background:#e8f8ef;color:#137941;border-radius:99px;padding:4px 8px;font-size:12px;margin:2px}.empty{text-align:center;color:var(--muted);padding:35px}
-.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.full{grid-column:1/-1}label{font-size:13px;font-weight:700;display:block;margin-bottom:6px}.campaignbox{max-width:900px}.preview{background:#e9f7ef;border-radius:10px;padding:15px;white-space:pre-wrap;min-height:80px}
-.notice{padding:12px 14px;background:#fff7dc;border:1px solid #f0d97b;border-radius:9px;color:#735d00;font-size:13px;margin-bottom:16px}
-.badge{padding:4px 8px;border-radius:99px;background:#eef2f4;font-size:12px}.actions{display:flex;gap:6px;flex-wrap:wrap}
-@media(max-width:900px){.sidebar{width:190px}.main{margin-left:190px;width:calc(100% - 190px);padding:18px}.grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:650px){.sidebar{position:static;width:100%;min-height:auto}.app{display:block}.main{margin:0;width:100%}.formgrid{grid-template-columns:1fr}.grid{grid-template-columns:1fr 1fr}.full{grid-column:auto}}
+:root {
+  --bg: #f4f6f8;
+  --card: #ffffff;
+  --text: #17202a;
+  --muted: #68737d;
+  --line: #e5e9ed;
+  --green: #18a957;
+  --green2: #0d8d47;
+  --green-light: #e8f8ef;
+  --dark: #18232c;
+  --danger: #d64545;
+  --danger-bg: #ffe9e9;
+  --warn-bg: #fff7dc;
+  --warn-border: #f0d97b;
+  --warn-text: #735d00;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: 'Inter', Arial, Helvetica, sans-serif; background: var(--bg); color: var(--text); }
+.app { display: flex; min-height: 100vh; }
+.sidebar { width: 240px; background: var(--dark); color: #fff; padding: 22px 14px; position: fixed; top: 0; bottom: 0; overflow-y: auto; z-index: 20; }
+.logo { font-size: 20px; font-weight: 800; padding: 0 10px 25px; letter-spacing: -0.5px; }
+.logo span { color: #35d47a; }
+.nav button { display: block; width: 100%; border: 0; background: transparent; color: #d9e1e6; text-align: left; padding: 12px 14px; border-radius: 8px; margin: 4px 0; cursor: pointer; font-size: 14px; transition: all 0.15s ease; }
+.nav button.active, .nav button:hover { background: #25343f; color: #fff; font-weight: 600; }
+.main { margin-left: 240px; width: calc(100% - 240px); padding: 28px; max-width: 1500px; }
+.page { display: none; }
+.page.active { display: block; }
+h1 { margin: 0 0 7px; font-size: 26px; }
+h2 { font-size: 18px; margin-top: 0; }
+h3 { font-size: 15px; margin: 16px 0 8px; }
+.subtitle { color: var(--muted); margin-bottom: 24px; font-size: 14px; }
+.grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px; box-shadow: 0 2px 7px #00000008; }
+.stat { font-size: 28px; font-weight: 800; margin: 8px 0; color: var(--dark); }
+.muted { color: var(--muted); font-size: 13px; }
+.panel { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 20px; margin-top: 18px; box-shadow: 0 2px 6px rgba(0,0,0,0.03); }
+.toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+input, select, textarea { border: 1px solid #d8dee3; border-radius: 8px; padding: 10px 12px; font: inherit; background: #fff; width: 100%; transition: border 0.15s ease; }
+input:focus, select:focus, textarea:focus { outline: 2px solid #bcefd1; border-color: var(--green); }
+.toolbar input, .toolbar select { width: auto; }
+input.search { min-width: 240px; flex: 1; }
+.btn { border: 0; border-radius: 8px; padding: 10px 14px; font-weight: 700; cursor: pointer; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.15s ease; text-decoration: none; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.primary { background: var(--green); color: #fff; }
+.primary:hover:not(:disabled) { background: var(--green2); }
+.secondary { background: #eef2f4; color: #26333c; }
+.secondary:hover:not(:disabled) { background: #dfe6ea; }
+.danger { background: var(--danger-bg); color: #b72e2e; }
+.danger:hover:not(:disabled) { background: #ffd6d6; }
+.outline { background: #fff; border: 1px solid #d0d7de; color: #26333c; }
+.outline:hover:not(:disabled) { background: #f4f6f8; }
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 12px 10px; border-bottom: 1px solid var(--line); font-size: 14px; vertical-align: middle; }
+th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.4px; background: #fafbfc; }
+tr.editing-row { background: #e8f8ef !important; outline: 2px solid var(--green); }
+tr:hover { background: #f9fbfd; }
+.tag { display: inline-block; background: var(--green-light); color: #137941; border-radius: 99px; padding: 4px 9px; font-size: 12px; font-weight: 600; margin: 2px; }
+.empty { text-align: center; color: var(--muted); padding: 35px; font-size: 14px; }
+.formgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.full { grid-column: 1 / -1; }
+label { font-size: 13px; font-weight: 700; display: block; margin-bottom: 6px; color: #2c3a47; }
+.campaignbox { max-width: 940px; }
+.preview { background: #e9f7ef; border: 1px solid #ccebd9; border-radius: 10px; padding: 15px; white-space: pre-wrap; min-height: 80px; font-size: 14px; line-height: 1.45; }
+.notice { padding: 12px 14px; background: var(--warn-bg); border: 1px solid var(--warn-border); border-radius: 9px; color: var(--warn-text); font-size: 13px; margin-bottom: 16px; line-height: 1.4; }
+.badge { padding: 4px 9px; border-radius: 99px; background: #eef2f4; font-size: 12px; font-weight: 600; display: inline-block; }
+.badge.optin { background: #e8f8ef; color: #117a3f; }
+.badge.optout { background: #ffe9e9; color: #b72e2e; }
+.badge.pending { background: #fff7dc; color: #856b00; }
+.badge.noresponse { background: #eef2f4; color: #5b6770; }
+.actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* Edit Box Destacado com Navegação Ir e Voltar */
+#contactForm {
+  display: none;
+  margin-bottom: 22px;
+  padding: 20px;
+  background: #f8fdf9;
+  border: 2px solid var(--green);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(24, 169, 87, 0.12);
+}
+.edit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 14px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #ccebd9;
+}
+.edit-title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.edit-nav-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Barra de Paginação / Ir e Voltar na Tabela */
+.pagination-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 14px;
+  background: #f8fafb;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  margin: 12px 0;
+}
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Painel de Controle de Campanha (Ir e Voltar entre Contatos da Fila) */
+.campaign-navigator {
+  background: #f8fafb;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 18px;
+}
+.progress-track {
+  width: 100%;
+  height: 10px;
+  background: #e5e9ed;
+  border-radius: 99px;
+  overflow: hidden;
+  margin: 10px 0 14px;
+}
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--green);
+  transition: width 0.25s ease;
+}
+.current-contact-card {
+  background: #fff;
+  border: 1px solid #d5e0e6;
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* Modal e Toast customizados (sem alert/confirm bloqueantes) */
+.toast-container {
+  position: fixed;
+  bottom: 22px;
+  right: 22px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 380px;
+}
+.toast {
+  background: #18232c;
+  color: #fff;
+  padding: 13px 16px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+  border-left: 4px solid var(--green);
+  animation: slideIn 0.2s ease;
+}
+.toast.error { border-left-color: var(--danger); }
+@keyframes slideIn { from { transform: translateY(15px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(24, 35, 44, 0.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 5000;
+  padding: 16px;
+}
+.modal-backdrop.active { display: flex; }
+.modal-box {
+  background: #fff;
+  border-radius: 14px;
+  max-width: 460px;
+  width: 100%;
+  padding: 22px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.22);
+}
+.modal-box h3 { margin-top: 0; font-size: 18px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
+
+@media(max-width:900px) {
+  .sidebar { width: 190px; }
+  .main { margin-left: 190px; width: calc(100% - 190px); padding: 18px; }
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media(max-width:650px) {
+  .sidebar { position: static; width: 100%; min-height: auto; }
+  .app { display: block; }
+  .main { margin: 0; width: 100%; padding: 14px; }
+  .formgrid { grid-template-columns: 1fr; }
+  .grid { grid-template-columns: 1fr 1fr; }
+  .full { grid-column: auto; }
+}
 </style>
 </head>
 <body>
+
 <div class="app">
-<aside class="sidebar">
-  <div class="logo">CRM <span>WhatsApp</span></div>
-  <div class="nav">
-    <button class="active" onclick="showPage('dashboard',this)">📊 Dashboard</button>
-    <button onclick="showPage('contacts',this)">👥 Contatos</button>
-    <button onclick="showPage('campaign',this)">📣 Campanhas</button>
-    <button onclick="showPage('consent',this)">✅ Consentimento</button>
-    <button onclick="showPage('sources',this)">📁 Grupos/Origens</button>
-    <button onclick="showPage('history',this)">🕘 Histórico</button>
-    <button onclick="showPage('sentdb',this)">🗄️ Banco de enviados</button>
+  <aside class="sidebar">
+    <div class="logo">CRM <span>WhatsApp</span></div>
+    <div class="nav">
+      <button class="active" onclick="showPage('dashboard',this)">📊 Dashboard</button>
+      <button onclick="showPage('contacts',this)">👥 Contatos</button>
+      <button onclick="showPage('campaign',this)">📣 Campanhas</button>
+      <button onclick="showPage('consent',this)">✅ Consentimento</button>
+      <button onclick="showPage('sources',this)">📁 Grupos/Origens</button>
+      <button onclick="showPage('history',this)">🕘 Histórico</button>
+      <button onclick="showPage('sentdb',this)">🗄️ Banco de enviados</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="page active">
+      <h1>Dashboard</h1>
+      <div class="subtitle">Seu CRM simples e rápido para organizar contatos extraídos e abrir campanhas no WhatsApp.</div>
+      <div class="grid">
+        <div class="card"><div class="muted">Contatos</div><div class="stat" id="statContacts">0</div></div>
+        <div class="card"><div class="muted">Com WhatsApp válido</div><div class="stat" id="statWhatsapp">0</div></div>
+        <div class="card"><div class="muted">Tags</div><div class="stat" id="statTags">0</div></div>
+        <div class="card"><div class="muted">Ações realizadas</div><div class="stat" id="statActions">0</div></div>
+      </div>
+      <div class="panel">
+        <h2>Como funciona</h2>
+        <p class="muted">Cadastre ou importe seus contatos em CSV, edite navegando com os botões de <b>Anterior / Próximo</b>, crie sua mensagem e abra cada conversa no WhatsApp com um clique.</p>
+        <div class="notice">Este CRM não envia mensagens automaticamente nem contorna limites do WhatsApp. O envio é confirmado por você na conversa do WhatsApp.</div>
+      </div>
+    </section>
+
+    <!-- CONTATOS -->
+    <section id="contacts" class="page">
+      <h1>Contatos</h1>
+      <div class="subtitle">Cadastre clientes, edite individualmente ou em sequência (Ir e Voltar) ou importe listas CSV.</div>
+      <div class="panel">
+        <div class="toolbar">
+          <input class="search" id="contactSearch" placeholder="Pesquisar nome, telefone, empresa ou origem..." oninput="onSearchOrFilterContacts()">
+          <select id="tagFilter" onchange="onSearchOrFilterContacts()"><option value="">Todas as tags</option></select>
+          <select id="sourceFilter" onchange="onSearchOrFilterContacts()"><option value="">Todas as origens</option></select>
+          <button class="btn primary" type="button" onclick="openContactForm()">+ Novo contato</button>
+          <button class="btn secondary" id="btnToggleSelect" type="button" onclick="toggleContactSelection()">☑️ Selecionar contatos</button>
+          <button class="btn danger" id="btnDeleteAllTop" type="button" onclick="deleteAllContacts()">🗑️ Apagar todos</button>
+          <label class="btn secondary" style="margin:0;cursor:pointer">📥 Importar CSV<input id="csvInput" type="file" accept=".csv,text/csv" style="display:none" onchange="importCSV(event)"></label>
+          <button class="btn secondary" type="button" onclick="downloadCSV()">📤 Exportar CSV</button>
+        </div>
+
+        <!-- FORMULÁRIO DE EDIÇÃO / CRIAÇÃO COM BOTÕES DE IR E VOLTAR ENTRE CONTATOS -->
+        <div id="contactForm">
+          <div class="edit-header">
+            <div class="edit-title-group">
+              <h2 id="contactFormTitle" style="margin:0;color:var(--green2)">Novo Contato</h2>
+              <span class="badge" id="contactFormCounter" style="display:none">Contato 1 de 1</span>
+            </div>
+            <!-- Botões de Ir e Voltar entre os contatos durante a edição -->
+            <div class="edit-nav-group" id="contactEditNav" style="display:none">
+              <button type="button" class="btn outline" id="btnEditPrev" onclick="navigateEditingContact(-1)" title="Ir para o contato anterior da lista">⬅️ Contato Anterior</button>
+              <button type="button" class="btn outline" id="btnEditNext" onclick="navigateEditingContact(1)" title="Ir para o próximo contato da lista">Próximo Contato ➡️</button>
+            </div>
+          </div>
+
+          <div class="formgrid">
+            <div><label>Nome</label><input id="cName" placeholder="Ex.: João Silva"></div>
+            <div><label>WhatsApp (com DDD/DDI)</label><input id="cPhone" placeholder="5511999999999"></div>
+            <div><label>Empresa</label><input id="cCompany" placeholder="Empresa"></div>
+            <div><label>Tag (separadas por vírgula)</label><input id="cTag" placeholder="Ex.: clientes, vip"></div>
+            <div><label>Origem / Grupo</label><input id="cSource" placeholder="Ex.: Grupo Condomínio Jardim"></div>
+            <div>
+              <label>Status de Consentimento</label>
+              <select id="cConsent">
+                <option value="pending">Aguardando</option>
+                <option value="optin">Autorizado (Opt-in)</option>
+                <option value="optout">Não autorizou (Opt-out)</option>
+                <option value="noresponse">Sem resposta</option>
+              </select>
+            </div>
+            <div class="full"><label>Observação</label><input id="cNote" placeholder="Observação opcional"></div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;align-items:center">
+            <button type="button" class="btn primary" onclick="saveContact(false)">💾 Salvar</button>
+            <button type="button" class="btn primary" id="btnSaveAndNext" style="display:none;background:#0d8d47" onclick="saveContact(true)">💾 Salvar e Ir para o Próximo ➡️</button>
+            <button type="button" class="btn secondary" onclick="closeContactForm()">Fechar / Cancelar</button>
+          </div>
+        </div>
+
+        <!-- BARRA DE SELEÇÃO EM MASSA (SOME AUTOMATICAMENTE APÓS APAGAR OU SAIR) -->
+        <div id="bulkContactTools" class="notice" style="display:none;margin-bottom:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+            <label style="display:inline-flex;gap:8px;align-items:center;font-weight:700;margin:0;cursor:pointer">
+              <input type="checkbox" id="selectVisibleContacts" style="width:18px;height:18px" onchange="selectAllVisibleContacts(this.checked)">
+              Selecionar contatos visíveis
+            </label>
+            <button type="button" class="btn outline" style="padding:6px 10px;font-size:12px" onclick="selectAllFilteredContacts()">Selecionar todos da lista (<span id="totalFilteredCount">0</span>)</button>
+            <span id="selectedContactCount" class="badge" style="background:#fff;color:#18232c">0 selecionado(s)</span>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn danger" type="button" onclick="deleteSelectedContacts()">🗑️ Apagar selecionados</button>
+            <button class="btn danger" type="button" onclick="deleteAllContacts()">⚠️ Apagar todos</button>
+            <button class="btn secondary" type="button" onclick="closeContactSelectionMode()">✖ Fechar seleção</button>
+          </div>
+        </div>
+
+        <!-- BARRA DE NAVEGAÇÃO IR E VOLTAR (PAGINAÇÃO E SALTO RÁPIDO ENTRE CONTATOS) -->
+        <div class="pagination-bar" id="contactsPaginationBar">
+          <div class="muted" id="contactsRangeInfo">Mostrando 0 de 0 contatos</div>
+          <div class="pagination-controls">
+            <button type="button" class="btn outline" id="btnPagePrev" onclick="changeContactsPage(-1)">⬅️ Anterior</button>
+            <span class="badge" id="pageIndicator">Página 1 de 1</span>
+            <button type="button" class="btn outline" id="btnPageNext" onclick="changeContactsPage(1)">Próxima ➡️</button>
+            <select id="pageSizeSelect" style="width:auto;padding:7px 10px;font-size:13px" onchange="onChangePageSize()">
+              <option value="25">25 por página</option>
+              <option value="50" selected>50 por página</option>
+              <option value="100">100 por página</option>
+              <option value="999999">Mostrar todos</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- TABELA DE CONTATOS -->
+        <div style="overflow:auto">
+          <table>
+            <thead>
+              <tr>
+                <th class="bulk-select-cell" style="display:none;width:44px">#</th>
+                <th style="width:55px"> Nº </th>
+                <th>Nome</th>
+                <th>WhatsApp</th>
+                <th>Origem / Grupo</th>
+                <th>Tag</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="contactsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- CAMPANHAS -->
+    <section id="campaign" class="page">
+      <h1>Campanha</h1>
+      <div class="subtitle">Escolha qualquer contato para um primeiro contato ou, para marketing, use somente contatos que autorizaram receber mensagens.</div>
+      <div class="panel campaignbox">
+        <div class="notice">Use o formato internacional no telefone, por exemplo: <b>5511999999999</b>. Os botões abaixo abrem o WhatsApp com o texto preenchido e permitem <b>ir e voltar</b> entre os contatos da fila.</div>
+
+        <div class="formgrid">
+          <div>
+            <label>Modo de seleção de público</label>
+            <select id="campaignMode" onchange="updateCampaignMode()">
+              <option value="all">Todos os contatos</option>
+              <option value="tag">Filtrar por Tag</option>
+              <option value="source">Filtrar por Origem / Grupo</option>
+              <option value="manual">Escolher contatos manualmente</option>
+            </select>
+          </div>
+          <div>
+            <label>Tipo de mensagem</label>
+            <select id="campaignType" onchange="updateCampaignType()">
+              <option value="consent">Primeiro contato / pedir autorização</option>
+              <option value="marketing">Campanha para contatos autorizados</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <select id="campaignTag" style="display:none;margin-bottom:12px" onchange="updateAudience()">
+            <option value="">Todas as tags</option>
+          </select>
+          <select id="campaignSource" style="display:none;margin-bottom:12px" onchange="updateAudience()">
+            <option value="">Todas as origens</option>
+          </select>
+          <div id="manualPicker" style="display:none;max-height:220px;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:8px;margin-bottom:12px"></div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin:8px 0 14px">
+          <div class="badge optin" id="audienceCount">0 contato(s) selecionado(s)</div>
+          <div class="muted" id="audienceWarning"></div>
+        </div>
+
+        <div id="consentHelper" class="notice">Use esta etapa para explicar de onde veio o contato e perguntar se a pessoa deseja receber informações.</div>
+
+        <div class="formgrid">
+          <div class="full">
+            <label>Nome da campanha (para consulta no banco de enviados)</label>
+            <input id="campaignName" placeholder="Ex.: Apresentação Outubro">
+          </div>
+          <div class="full">
+            <label>Imagem da propaganda (opcional)</label>
+            <input id="campaignImage" type="file" accept="image/*" onchange="handleCampaignImage(event)">
+            <div id="imagePreview" style="margin-top:10px"></div>
+          </div>
+          <div class="full">
+            <label>Mensagem</label>
+            <textarea id="campaignMessage" rows="6" placeholder="Olá {{nome}}! Tudo bem? Vi seu contato no grupo {{origem}}..." oninput="updatePreview()"></textarea>
+            <div style="display:flex;justify-content:space-between;margin-top:6px">
+              <span class="muted">Variáveis disponíveis: <b>{{nome}}</b>, <b>{{empresa}}</b>, <b>{{origem}}</b></span>
+              <span class="muted" id="charCount">0 caracteres</span>
+            </div>
+          </div>
+        </div>
+
+        <h3>Prévia da mensagem (<span id="previewContactName">exemplo</span>)</h3>
+        <div class="preview" id="preview">Sua mensagem aparecerá aqui.</div>
+
+        <!-- NAVEGADOR DE CAMPANHA COM IR E VOLTAR ENTRE OS CONTATOS -->
+        <div class="campaign-navigator">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+            <h3 style="margin:0">Fila de Disparo Assistido (Ir e Voltar entre Contatos)</h3>
+            <span class="muted" id="progressSummary">Nenhuma campanha iniciada.</span>
+          </div>
+          <div class="progress-track"><div class="progress-fill" id="progressBar"></div></div>
+
+          <div class="current-contact-card" id="currentCampaignCard">
+            <div>
+              <div class="muted" id="queuePositionLabel">Aguardando início da fila</div>
+              <div style="font-size:16px;font-weight:700;margin-top:2px" id="queueCurrentName">Clique em "Iniciar / Carregar Fila" para começar</div>
+              <div class="muted" id="queueCurrentPhone"></div>
+            </div>
+            <div>
+              <span class="badge" id="queueCurrentStatus">Parado</span>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button type="button" class="btn primary" onclick="openCampaign()">🚀 Iniciar / Carregar Fila</button>
+            <button type="button" class="btn outline" id="btnCampPrev" onclick="navigateCampaignQueue(-1)">⬅️ Contato Anterior</button>
+            <button type="button" class="btn outline" id="btnCampNext" onclick="navigateCampaignQueue(1)">Próximo Contato ➡️</button>
+            <button type="button" class="btn primary" id="btnCampOpenWhats" onclick="openActiveQueueContactWhats()">💬 Abrir WhatsApp deste contato</button>
+            <button type="button" class="btn secondary" onclick="markCurrentSent()">✅ Marcar Enviado e Avançar</button>
+            <button type="button" class="btn secondary" onclick="skipCurrent()">⏭️ Pular Contato</button>
+            <button type="button" class="btn danger" onclick="resetProgress()">🔄 Reiniciar Fila</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GRUPOS / ORIGENS -->
+    <section id="sources" class="page">
+      <h1>Grupos / Origens</h1>
+      <div class="subtitle">Separe os contatos conforme o arquivo CSV ou grupo de onde foram extraídos.</div>
+      <div class="panel">
+        <div class="notice">Para importar um novo grupo de contatos, clique em <b>+ Importar novo grupo</b>, informe o nome da origem (ex.: <b>Grupo Condomínio X</b>) e escolha o arquivo CSV.</div>
+        <div class="toolbar">
+          <input id="newSourceNameInput" placeholder="Nome do grupo/origem (ex.: Grupo Vendas)" style="min-width:260px">
+          <label class="btn primary" style="margin:0;cursor:pointer">
+            + Importar novo grupo CSV
+            <input id="sourceCsvInput" type="file" accept=".csv,text/csv" style="display:none" onchange="importNewSourceCSV(event)">
+          </label>
+          <button class="btn secondary" type="button" onclick="exportBySource()">📤 Exportar por origem</button>
+        </div>
+        <div id="sourcesBody"></div>
+      </div>
+    </section>
+
+    <!-- CONSENTIMENTO -->
+    <section id="consent" class="page">
+      <h1>Consentimento</h1>
+      <div class="subtitle">Acompanhe quem autorizou receber informações e quem pediu para não receber.</div>
+      <div class="grid">
+        <div class="card"><div class="muted">Autorizados</div><div class="stat" id="statOptIn">0</div></div>
+        <div class="card"><div class="muted">Aguardando</div><div class="stat" id="statPending">0</div></div>
+        <div class="card"><div class="muted">Não autorizaram</div><div class="stat" id="statOptOut">0</div></div>
+        <div class="card"><div class="muted">Sem resposta</div><div class="stat" id="statNoResponse">0</div></div>
+      </div>
+      <div class="panel">
+        <div style="overflow:auto">
+          <table>
+            <thead>
+              <tr><th>Contato</th><th>WhatsApp</th><th>Origem</th><th>Status</th><th>Alterar Status</th></tr>
+            </thead>
+            <tbody id="consentBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- BANCO DE ENVIADOS -->
+    <section id="sentdb" class="page">
+      <h1>Banco de contatos enviados</h1>
+      <div class="subtitle">Consulte quem foi marcado como enviado, quando e em qual campanha.</div>
+      <div class="panel">
+        <div class="toolbar">
+          <input id="sentSearch" class="search" placeholder="Pesquisar nome, telefone ou campanha..." oninput="renderSentDatabase()">
+          <button class="btn secondary" type="button" onclick="exportSentDatabase()">📤 Exportar banco CSV</button>
+          <button class="btn danger" type="button" onclick="clearSentDatabase()">🗑️ Limpar banco</button>
+        </div>
+        <div class="muted" id="sentDbCount" style="margin-bottom:10px">0 registros</div>
+        <div style="overflow:auto">
+          <table>
+            <thead>
+              <tr><th>Data/hora</th><th>Contato</th><th>WhatsApp</th><th>Campanha</th><th>Status</th></tr>
+            </thead>
+            <tbody id="sentDbBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- HISTÓRICO -->
+    <section id="history" class="page">
+      <h1>Histórico</h1>
+      <div class="subtitle">Registro local das conversas abertas pelo CRM.</div>
+      <div class="panel">
+        <div style="overflow:auto">
+          <table>
+            <thead>
+              <tr><th>Data</th><th>Contato</th><th>Mensagem</th></tr>
+            </thead>
+            <tbody id="historyBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- MODAL DE CONFIRMAÇÃO CUSTOMIZADO -->
+<div class="modal-backdrop" id="confirmModal">
+  <div class="modal-box">
+    <h3 id="confirmModalTitle">Confirmar ação</h3>
+    <p id="confirmModalText" class="muted" style="font-size:14px;line-height:1.5;margin:10px 0 0"></p>
+    <div class="modal-actions">
+      <button type="button" class="btn secondary" onclick="closeConfirmModal()">Cancelar</button>
+      <button type="button" class="btn danger" id="confirmModalBtn">Confirmar</button>
+    </div>
   </div>
-</aside>
+</div>
 
-<main class="main">
-<section id="dashboard" class="page active">
-<h1>Dashboard</h1><div class="subtitle">Seu CRM simples para organizar contatos e abrir campanhas no WhatsApp.</div>
-<div class="grid">
-<div class="card"><div class="muted">Contatos</div><div class="stat" id="statContacts">0</div></div>
-<div class="card"><div class="muted">Com WhatsApp</div><div class="stat" id="statWhatsapp">0</div></div>
-<div class="card"><div class="muted">Tags</div><div class="stat" id="statTags">0</div></div>
-<div class="card"><div class="muted">Ações realizadas</div><div class="stat" id="statActions">0</div></div>
-</div>
-<div class="panel">
-<h2>Como funciona</h2>
-<p class="muted">Cadastre ou importe seus contatos, crie uma mensagem e use os botões para abrir cada conversa no WhatsApp com a mensagem preenchida.</p>
-<div class="notice">Este CRM não envia mensagens automaticamente nem contorna limites do WhatsApp. O envio é confirmado por você na conversa do WhatsApp.</div>
-</div>
-</section>
-
-<section id="contacts" class="page">
-<h1>Contatos</h1><div class="subtitle">Cadastre clientes ou importe uma lista CSV.</div>
-<div class="panel">
-<div class="toolbar">
-<input class="search" id="contactSearch" placeholder="Pesquisar nome ou telefone..." oninput="renderContacts()">
-<select id="tagFilter" onchange="renderContacts()"><option value="">Todas as tags</option></select>
-<button class="btn primary" onclick="openContactForm()">+ Novo contato</button>
-<button class="btn secondary" type="button" onclick="toggleContactSelection()">Selecionar contatos</button>
-<button class="btn danger" type="button" onclick="deleteAllContacts()">Apagar todos</button>
-<label class="btn secondary" style="margin:0;cursor:pointer">Importar CSV<input id="csvInput" type="file" accept=".csv,text/csv" style="display:none" onchange="importCSV(event)"></label>
-<button class="btn secondary" onclick="downloadCSV()">Exportar CSV</button>
-</div>
-<div id="contactForm" style="display:none;margin-bottom:18px">
-<div class="formgrid">
-<div><label>Nome</label><input id="cName" placeholder="Ex.: João Silva"></div>
-<div><label>WhatsApp</label><input id="cPhone" placeholder="5511999999999"></div>
-<div><label>Empresa</label><input id="cCompany" placeholder="Empresa"></div>
-<div><label>Tag</label><input id="cTag" placeholder="Ex.: clientes"></div>
-<div><label>Origem / Grupo</label><input id="cSource" placeholder="Ex.: Grupo Condomínio Jardim"></div>
-<div class="full"><label>Observação</label><input id="cNote" placeholder="Observação opcional"></div>
-</div><br>
-<button class="btn primary" onclick="saveContact()">Salvar</button>
-<button class="btn secondary" onclick="closeContactForm()">Cancelar</button>
-</div>
-<div style="overflow:auto"><div id="bulkContactTools" class="notice" style="display:none;margin-bottom:12px">
-<label style="display:inline-flex;gap:8px;align-items:center;font-weight:600"><input type="checkbox" id="selectVisibleContacts" onchange="selectAllVisibleContacts(this.checked)"> Selecionar todos os contatos visíveis</label>
-<span id="selectedContactCount" style="margin:0 12px">0 selecionados</span>
-<button class="btn danger" type="button" onclick="deleteSelectedContacts()">Apagar selecionados</button>
-</div>
-<table><thead><tr><th class="bulk-select-cell" style="display:none">Selecionar</th><th>Nome</th><th>WhatsApp</th><th>Origem</th><th>Tag</th><th>Ações</th></tr></thead><tbody id="contactsBody"></tbody></table></div>
-</div>
-</section>
-
-<section id="campaign" class="page">
-<h1>Campanha</h1><div class="subtitle">Escolha qualquer contato para um primeiro contato ou, para marketing, use somente contatos que autorizaram receber mensagens.</div>
-<div class="panel campaignbox">
-<div class="notice">Use o formato internacional no telefone, por exemplo: <b>5511999999999</b>. O botão abaixo abre o WhatsApp com o texto preenchido; você decide quando enviar.</div>
-<label>Público</label>
-<select id="campaignTag" style="width:100%;margin-bottom:15px" onchange="updateAudience()"><option value="">Todos os contatos</option></select>
-<div class="muted" id="audienceCount">0 contatos</div><br>
-<label>Nome da campanha (para consulta posterior)</label>
-<input id="campaignName" style="width:100%;margin-bottom:15px" placeholder="Ex.: Oferta de outubro">
-<label>Tipo de mensagem</label>
-<select id="campaignType" style="width:100%;margin-bottom:15px" onchange="updateCampaignType()">
-<option value="consent">Primeiro contato / pedir autorização</option>
-<option value="marketing">Campanha para contatos autorizados</option>
-</select>
-<div id="consentHelper" class="notice">Use esta etapa para explicar de onde veio o contato e perguntar se a pessoa deseja receber informações. A resposta deve ser registrada antes de campanhas de marketing.</div>
-<label>Imagem da propaganda (opcional)</label>
-<input id="campaignImage" type="file" accept="image/*" style="width:100%;padding:10px;border:1px solid #d8dee3;border-radius:8px">
-<div id="imagePreview" style="margin-top:10px"></div>
-<br>
-<label>Mensagem</label>
-<textarea id="campaignMessage" rows="7" style="width:100%" placeholder="Olá {{nome}}! Temos uma novidade para você..."></textarea>
-<div style="display:flex;justify-content:space-between;margin-top:8px"><span class="muted">Variáveis: {{nome}}, {{empresa}}</span><span class="muted" id="charCount">0 caracteres</span></div>
-<h3>Prévia</h3><div class="preview" id="preview">Sua mensagem aparecerá aqui.</div>
-<br><button class="btn primary" onclick="openCampaign()">Abrir próxima conversa</button>
-<div class="muted" style="margin-top:10px">A imagem fica disponível para sua propaganda e pode ser anexada manualmente na conversa do WhatsApp. O navegador não consegue anexar automaticamente um arquivo ao WhatsApp Web via HTML puro.</div>
-</div>
-</section>
-
-
-<section id="sources" class="page">
-<h1>Grupos / Origens</h1>
-<div class="subtitle">Separe os contatos conforme o arquivo ou grupo de onde foram extraídos.</div>
-<div class="panel">
-<div class="notice">Para criar um grupo de contatos, clique em <b>Importar novo grupo</b>, escolha o CSV e dê um nome para a origem, por exemplo <b>Grupo Condomínio X</b>. Todos os contatos daquele arquivo ficarão associados a essa origem.</div>
-<div class="toolbar">
-<button class="btn primary" onclick="newSourceImport()">+ Importar novo grupo</button>
-<button class="btn secondary" onclick="exportBySource()">Exportar por origem</button>
-</div>
-<div id="sourcesBody"></div>
-</div>
-</section>
-
-<section id="consent" class="page">
-<h1>Consentimento</h1>
-<div class="subtitle">Acompanhe quem autorizou receber informações e quem pediu para não receber.</div>
-<div class="grid">
-<div class="card"><div class="muted">Autorizados</div><div class="stat" id="statOptIn">0</div></div>
-<div class="card"><div class="muted">Aguardando</div><div class="stat" id="statPending">0</div></div>
-<div class="card"><div class="muted">Não autorizaram</div><div class="stat" id="statOptOut">0</div></div>
-<div class="card"><div class="muted">Sem resposta</div><div class="stat" id="statNoResponse">0</div></div>
-</div>
-<div class="panel">
-<table><thead><tr><th>Contato</th><th>Origem</th><th>Status</th><th>Ações</th></tr></thead><tbody id="consentBody"></tbody></table>
-</div>
-</section>
-
-<section id="sentdb" class="page">
-<h1>Banco de contatos enviados</h1>
-<div class="subtitle">Consulte quem foi marcado como enviado, quando e em qual campanha.</div>
-<div class="panel">
-<div class="toolbar">
-<input id="sentSearch" class="search" placeholder="Pesquisar nome ou telefone..." oninput="renderSentDatabase()">
-<button class="btn secondary" onclick="exportSentDatabase()">Exportar banco CSV</button>
-<button class="btn danger" onclick="clearSentDatabase()">Limpar banco</button>
-</div>
-<div class="muted" id="sentDbCount" style="margin-bottom:10px">0 registros</div>
-<div style="overflow:auto"><table><thead><tr><th>Data/hora</th><th>Contato</th><th>WhatsApp</th><th>Campanha</th><th>Status</th></tr></thead><tbody id="sentDbBody"></tbody></table></div>
-</div>
-</section>
-<section id="history" class="page">
-<h1>Histórico</h1><div class="subtitle">Registro local das conversas abertas pelo CRM.</div>
-<div class="panel"><div style="overflow:auto"><table><thead><tr><th>Data</th><th>Contato</th><th>Mensagem</th></tr></thead><tbody id="historyBody"></tbody></table></div></div>
-</section>
-</main>
-</div>
+<!-- CONTAINER DE NOTIFICAÇÕES (TOASTS) -->
+<div class="toast-container" id="toastContainer"></div>
 
 <script>
-const KEY='crm_whatsapp_contacts_v1', HIST='crm_whatsapp_history_v1', SENTKEY='crm_whatsapp_sent_database_v1';
-let contacts=JSON.parse(localStorage.getItem(KEY)||'[]').map((c,i)=>({
- ...c,
- id:(c.id!==undefined&&c.id!==null&&String(c.id)!=='')?String(c.id):('legacy_'+i+'_'+Date.now()),
- source:c.source||'',
- consent:c.consent||'pending'
-}));
-let history=JSON.parse(localStorage.getItem(HIST)||'[]');
-let sentDatabase=JSON.parse(localStorage.getItem(SENTKEY)||'[]');
-let editingId=null, campaignQueue=[], queueIndex=0;
-let selectedContactIds=new Set();
-normalizeContactIds();
-let campaignProgress=JSON.parse(localStorage.getItem('crm_whatsapp_campaign_progress_v1')||'null')||{active:false,items:[],currentIndex:0,openedId:null};
+const KEY = 'crm_whatsapp_contacts_v1';
+const HIST = 'crm_whatsapp_history_v1';
+const SENTKEY = 'crm_whatsapp_sent_database_v1';
+const PROGKEY = 'crm_whatsapp_campaign_progress_v1';
 
-function saveData(){localStorage.setItem(KEY,JSON.stringify(contacts));localStorage.setItem(HIST,JSON.stringify(history));localStorage.setItem(SENTKEY,JSON.stringify(sentDatabase));updateStats();populateTags();renderContacts();renderHistory();renderSentDatabase();updateAudience();}
-function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
-function normPhone(p){return String(p||'').replace(/\D/g,'');}
-function showPage(id,btn){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));btn.classList.add('active');}
-function updateStats(){
- document.getElementById('statContacts').textContent=contacts.length;
- document.getElementById('statWhatsapp').textContent=contacts.filter(c=>normPhone(c.phone).length>=10).length;
- document.getElementById('statTags').textContent=[...new Set(contacts.flatMap(c=>(c.tag||'').split(',').map(x=>x.trim()).filter(Boolean)))].length;
- document.getElementById('statActions').textContent=history.length;
+// Carrega contatos e garante IDs únicos para TODOS os contatos (evita falha no Editar a partir do 4º contato)
+let contacts = [];
+try {
+  contacts = JSON.parse(localStorage.getItem(KEY) || '[]') || [];
+} catch (e) {
+  contacts = [];
 }
-function populateTags(){
- const tags=[...new Set(contacts.flatMap(c=>(c.tag||'').split(',').map(x=>x.trim()).filter(Boolean)))].sort();
- const current=document.getElementById('tagFilter')?.value||'';
- document.getElementById('tagFilter').innerHTML='<option value="">Todas as tags</option>'+tags.map(t=>`<option>${esc(t)}</option>`).join('');
- document.getElementById('tagFilter').value=current;
- const cc=document.getElementById('campaignTag')?.value||'';
- document.getElementById('campaignTag').innerHTML='<option value="">Todos os contatos</option>'+tags.map(t=>`<option>${esc(t)}</option>`).join('');
- document.getElementById('campaignTag').value=cc;
+
+let history = [];
+try {
+  history = JSON.parse(localStorage.getItem(HIST) || '[]') || [];
+} catch (e) {
+  history = [];
 }
-function renderContacts(){
- const q=(document.getElementById('contactSearch')?.value||'').toLowerCase();
- const tag=document.getElementById('tagFilter')?.value||'';
- const list=contacts.filter(c=>(!q||(c.name+' '+c.phone+' '+c.company).toLowerCase().includes(q))&&(!tag||(c.tag||'').split(',').map(x=>x.trim()).includes(tag)));
- const body=document.getElementById('contactsBody');
- body.innerHTML=list.length?list.map(c=>`<tr><td class="bulk-select-cell" style="display:${window.contactSelectionMode?'table-cell':'none'}"><input type="checkbox" class="contact-row-select" data-select-id="${esc(String(c.id))}" ${selectedContactIds.has(String(c.id))?'checked':''} onchange="setContactSelected(this.dataset.selectId,this.checked)"></td><td><b>${esc(c.name)}</b><br><span class="muted">${esc(c.note||'')}</span></td><td>${esc(c.phone)}</td><td>${esc(c.source||'')}</td><td>${(c.tag||'').split(',').filter(Boolean).map(t=>`<span class="tag">${esc(t.trim())}</span>`).join('')}</td><td><div class="actions"><button type="button" class="btn primary" data-contact-action="whatsapp" data-contact-id="${esc(String(c.id))}">WhatsApp</button><button type="button" class="btn secondary" data-contact-action="edit" data-contact-id="${esc(String(c.id))}">Editar</button><button type="button" class="btn danger" data-contact-action="delete" data-contact-id="${esc(String(c.id))}">Excluir</button></div></td></tr>`).join(''):'<tr><td colspan="6" class="empty">Nenhum contato encontrado.</td></tr>';
+
+let sentDatabase = [];
+try {
+  sentDatabase = JSON.parse(localStorage.getItem(SENTKEY) || '[]') || [];
+} catch (e) {
+  sentDatabase = [];
 }
-function openContactForm(id=null){
- editingId=id;
- document.getElementById('contactForm').style.display='block';
- if(id){
- const c=contacts.find(x=>String(x.id)===String(id));
- if(!c){editingId=null;alert('Não encontrei esse contato pelo identificador. Atualize a página e tente novamente.');return}
- document.getElementById('cName').value=c.name||'';
- document.getElementById('cPhone').value=c.phone||'';
- document.getElementById('cCompany').value=c.company||'';
- document.getElementById('cTag').value=c.tag||'';
- if(document.getElementById('cSource'))document.getElementById('cSource').value=c.source||'';
- document.getElementById('cNote').value=c.note||'';
+
+let campaignProgress = { active: false, items: [], currentIndex: 0, openedId: null };
+try {
+  const savedProg = JSON.parse(localStorage.getItem(PROGKEY) || 'null');
+  if (savedProg && Array.isArray(savedProg.items)) campaignProgress = savedProg;
+} catch (e) {}
+
+let editingId = null;
+let selectedContactIds = new Set();
+window.contactSelectionMode = false;
+
+// Estado de paginação da tabela de contatos
+let contactsPage = 1;
+let contactsPageSize = 50;
+
+// Sistema de Toasts e Modal (substitui alert/confirm nativo)
+function showToast(message, type = 'success') {
+  const container = document.getElementById('toastContainer');
+  if (!container) return;
+  const toast = document.createElement('div');
+  toast.className = 'toast' + (type === 'error' ? ' error' : '');
+  toast.textContent = message;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    setTimeout(() => toast.remove(), 250);
+  }, 3400);
 }
- else ['cName','cPhone','cCompany','cTag','cSource','cNote'].forEach(x=>document.getElementById(x).value='');
+
+let confirmCallback = null;
+function askConfirm(title, message, onConfirm, confirmLabel = 'Confirmar') {
+  document.getElementById('confirmModalTitle').textContent = title;
+  document.getElementById('confirmModalText').textContent = message;
+  const btn = document.getElementById('confirmModalBtn');
+  btn.textContent = confirmLabel;
+  confirmCallback = onConfirm;
+  btn.onclick = () => {
+    const cb = confirmCallback;
+    closeConfirmModal();
+    if (cb) cb();
+  };
+  document.getElementById('confirmModal').classList.add('active');
 }
-function closeContactForm(){document.getElementById('contactForm').style.display='none';editingId=null;}
-function saveContact(){
- const name=document.getElementById('cName').value.trim(),phone=normPhone(document.getElementById('cPhone').value);
- if(!name||phone.length<10){alert('Informe nome e um WhatsApp válido com DDI.');return}
- const data={name,phone,company:document.getElementById('cCompany').value.trim(),tag:document.getElementById('cTag').value.trim(),source:document.getElementById('cSource').value.trim(),note:document.getElementById('cNote').value.trim()};
- if(editingId){
- const existing=contacts.find(x=>String(x.id)===String(editingId));
- if(!existing){alert('Contato não encontrado. Atualize a página e tente novamente.');return}
- Object.assign(existing,data);
-}else{
- data.id=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():'c_'+Date.now()+'_'+Math.random().toString(36).slice(2);
- data.consent='pending';
- contacts.push(data);
+
+function closeConfirmModal() {
+  document.getElementById('confirmModal').classList.remove('active');
+  confirmCallback = null;
 }
- closeContactForm();saveData();
+
+// Garante que absolutamente todos os contatos tenham ID único e válido
+function generateUniqueId(prefix = 'c', index = 0) {
+  if (window.crypto && crypto.randomUUID) {
+    return prefix + '_' + crypto.randomUUID();
+  }
+  return prefix + '_' + Date.now() + '_' + index + '_' + Math.random().toString(36).slice(2, 10);
 }
-window.contactSelectionMode=false;
-function toggleContactSelection(){
- window.contactSelectionMode=!window.contactSelectionMode;
- const tools=document.getElementById('bulkContactTools');
- if(tools)tools.style.display=window.contactSelectionMode?'block':'none';
- document.querySelectorAll('.bulk-select-cell').forEach(el=>el.style.display=window.contactSelectionMode?'table-cell':'none');
- if(!window.contactSelectionMode){selectedContactIds.clear();const all=document.getElementById('selectVisibleContacts');if(all)all.checked=false;}
- renderContacts();updateSelectedCount();
+
+function normalizeContactIds() {
+  const seenIds = new Set();
+  let changed = false;
+
+  contacts.forEach((c, idx) => {
+    let rawId = c.id !== undefined && c.id !== null ? String(c.id).trim() : '';
+    if (!rawId || rawId === 'undefined' || rawId === 'null' || seenIds.has(rawId)) {
+      rawId = generateUniqueId('contact', idx);
+      c.id = rawId;
+      changed = true;
+    } else {
+      c.id = rawId;
+    }
+    seenIds.add(rawId);
+
+    if (!c.source) c.source = '';
+    if (!c.consent) c.consent = 'pending';
+    if (!c.company) c.company = '';
+    if (!c.tag) c.tag = '';
+    if (!c.note) c.note = '';
+  });
+
+  if (changed) {
+    localStorage.setItem(KEY, JSON.stringify(contacts));
+  }
 }
-function setContactSelected(id,checked){id=String(id);if(checked)selectedContactIds.add(id);else selectedContactIds.delete(id);updateSelectedCount();}
-function selectAllVisibleContacts(checked){
- document.querySelectorAll('#contactsBody .contact-row-select').forEach(cb=>{cb.checked=checked;setContactSelected(cb.dataset.selectId,checked)});
+
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, m => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[m]));
 }
-function updateSelectedCount(){
- const el=document.getElementById('selectedContactCount');if(el)el.textContent=selectedContactIds.size+' selecionado(s)';
+
+function normPhone(p) {
+  return String(p || '').replace(/\D/g, '');
 }
-function deleteSelectedContacts(){
- const ids=[...selectedContactIds];if(!ids.length){alert('Selecione pelo menos um contato.');return}
- if(!confirm('Apagar '+ids.length+' contato(s) selecionado(s)? Esta ação não pode ser desfeita.'))return;
- contacts=contacts.filter(c=>!ids.includes(String(c.id)));ids.forEach(id=>selectedContactIds.delete(id));
- saveData();renderSources();renderConsent();renderContacts();updateSelectedCount();
+
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
+  const target = document.getElementById(id);
+  if (target) target.classList.add('active');
+  document.querySelectorAll('.nav button').forEach(x => x.classList.remove('active'));
+  if (btn) btn.classList.add('active');
 }
-function deleteAllContacts(){
- if(!contacts.length){alert('Não há contatos para apagar.');return}
- const typed=prompt('Isso apagará TODOS os '+contacts.length+' contatos do CRM. Para confirmar, digite APAGAR TUDO:');
- if(typed!=='APAGAR TUDO'){alert('Ação cancelada.');return}
- contacts=[];selectedContactIds.clear();saveData();renderSources();renderConsent();renderContacts();updateSelectedCount();
+
+function saveData() {
+  normalizeContactIds();
+  localStorage.setItem(KEY, JSON.stringify(contacts));
+  localStorage.setItem(HIST, JSON.stringify(history));
+  localStorage.setItem(SENTKEY, JSON.stringify(sentDatabase));
+  updateStats();
+  populateTagsAndSources();
+  renderContacts();
+  renderHistory();
+  renderSentDatabase();
+  renderSources();
+  renderConsent();
+  updateAudience();
 }
-function findContactById(id){return contacts.find(x=>String(x.id)===String(id))}
-function normalizeContactIds(){
- let changed=false;
- contacts.forEach((c,i)=>{if(c.id===undefined||c.id===null||String(c.id)===''||String(c.id)==='undefined'||String(c.id)==='null'){c.id='migrated_'+Date.now()+'_'+i+'_'+Math.random().toString(36).slice(2);changed=true;}});
- if(changed)localStorage.setItem(KEY,JSON.stringify(contacts));
+
+function updateStats() {
+  document.getElementById('statContacts').textContent = contacts.length;
+  document.getElementById('statWhatsapp').textContent = contacts.filter(c => normPhone(c.phone).length >= 10).length;
+  const uniqueTags = [...new Set(contacts.flatMap(c => (c.tag || '').split(',').map(x => x.trim()).filter(Boolean)))];
+  document.getElementById('statTags').textContent = uniqueTags.length;
+  document.getElementById('statActions').textContent = history.length;
 }
-function editContactById(id){const c=findContactById(id);if(!c){alert('Contato não encontrado. Importe novamente ou atualize a lista.');return}openContactForm(String(c.id))}
-function deleteContactById(id){const c=findContactById(id);if(!c)return;if(confirm('Excluir '+(c.name||'este contato')+'?')){contacts=contacts.filter(x=>String(x.id)!==String(id));saveData()}}
-function quickWhatsById(id){const c=findContactById(id);if(c)quickWhats(c.id)}
-function editContact(id){openContactForm(String(id))}
-document.addEventListener('click',function(ev){
- const btn=ev.target.closest('[data-contact-action]');
- if(!btn)return;
- const id=btn.getAttribute('data-contact-id');
- const action=btn.getAttribute('data-contact-action');
- if(action==='edit')editContactById(id);
- else if(action==='delete')deleteContactById(id);
- else if(action==='whatsapp')quickWhatsById(id);
+
+function populateTagsAndSources() {
+  const tags = [...new Set(contacts.flatMap(c => (c.tag || '').split(',').map(x => x.trim()).filter(Boolean)))].sort();
+  const sources = [...new Set(contacts.map(c => (c.source || '').trim()).filter(Boolean))].sort();
+
+  const tagFilter = document.getElementById('tagFilter');
+  if (tagFilter) {
+    const cur = tagFilter.value || '';
+    tagFilter.innerHTML = '<option value="">Todas as tags</option>' + tags.map(t => `<option value="${esc(t)}">${esc(t)}</option>`).join('');
+    tagFilter.value = cur;
+  }
+
+  const sourceFilter = document.getElementById('sourceFilter');
+  if (sourceFilter) {
+    const cur = sourceFilter.value || '';
+    sourceFilter.innerHTML = '<option value="">Todas as origens</option>' + sources.map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join('');
+    sourceFilter.value = cur;
+  }
+
+  const campTag = document.getElementById('campaignTag');
+  if (campTag) {
+    const cur = campTag.value || '';
+    campTag.innerHTML = '<option value="">Todas as tags</option>' + tags.map(t => `<option value="${esc(t)}">${esc(t)}</option>`).join('');
+    campTag.value = cur;
+  }
+
+  const campSource = document.getElementById('campaignSource');
+  if (campSource) {
+    const cur = campSource.value || '';
+    campSource.innerHTML = '<option value="">Todas as origens</option>' + sources.map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join('');
+    campSource.value = cur;
+  }
+}
+
+// Retorna a lista filtrada atual na aba de Contatos
+function getFilteredContacts() {
+  const q = (document.getElementById('contactSearch')?.value || '').toLowerCase().trim();
+  const tag = document.getElementById('tagFilter')?.value || '';
+  const source = document.getElementById('sourceFilter')?.value || '';
+
+  return contacts.filter(c => {
+    const textMatch = !q || `${c.name || ''} ${c.phone || ''} ${c.company || ''} ${c.source || ''} ${c.note || ''}`.toLowerCase().includes(q);
+    const tagMatch = !tag || (c.tag || '').split(',').map(x => x.trim()).includes(tag);
+    const sourceMatch = !source || (c.source || '').trim() === source;
+    return textMatch && tagMatch && sourceMatch;
+  });
+}
+
+function onSearchOrFilterContacts() {
+  contactsPage = 1;
+  renderContacts();
+}
+
+function onChangePageSize() {
+  const val = parseInt(document.getElementById('pageSizeSelect').value, 10);
+  contactsPageSize = isNaN(val) ? 50 : val;
+  contactsPage = 1;
+  renderContacts();
+}
+
+function changeContactsPage(delta) {
+  const list = getFilteredContacts();
+  const totalPages = Math.max(1, Math.ceil(list.length / contactsPageSize));
+  contactsPage = Math.min(totalPages, Math.max(1, contactsPage + delta));
+  renderContacts();
+}
+
+// Renderiza a tabela de contatos e sincroniza a barra de seleção e paginação
+function renderContacts() {
+  // Se não houver mais contatos, esconde automaticamente o painel de seleção
+  if (contacts.length === 0 && window.contactSelectionMode) {
+    closeContactSelectionMode(false);
+  }
+
+  const list = getFilteredContacts();
+  const total = list.length;
+  const totalPages = Math.max(1, Math.ceil(total / contactsPageSize));
+  if (contactsPage > totalPages) contactsPage = totalPages;
+  if (contactsPage < 1) contactsPage = 1;
+
+  const startIdx = (contactsPage - 1) * contactsPageSize;
+  const pageItems = list.slice(startIdx, startIdx + contactsPageSize);
+
+  // Atualiza barra de paginação (Ir e Voltar da tabela)
+  const rangeInfo = document.getElementById('contactsRangeInfo');
+  if (rangeInfo) {
+    if (total === 0) {
+      rangeInfo.textContent = 'Nenhum contato para exibir';
+    } else {
+      const from = startIdx + 1;
+      const to = Math.min(startIdx + pageItems.length, total);
+      rangeInfo.textContent = `Mostrando ${from}–${to} de ${total} contato(s)`;
+    }
+  }
+  const pageInd = document.getElementById('pageIndicator');
+  if (pageInd) pageInd.textContent = `Página ${contactsPage} de ${totalPages}`;
+  const btnPrev = document.getElementById('btnPagePrev');
+  const btnNext = document.getElementById('btnPageNext');
+  if (btnPrev) btnPrev.disabled = contactsPage <= 1;
+  if (btnNext) btnNext.disabled = contactsPage >= totalPages;
+
+  const totalFilteredCount = document.getElementById('totalFilteredCount');
+  if (totalFilteredCount) totalFilteredCount.textContent = total;
+
+  // Atualiza visibilidade do cabeçalho de seleção
+  document.querySelectorAll('.bulk-select-cell').forEach(el => {
+    el.style.display = window.contactSelectionMode ? 'table-cell' : 'none';
+  });
+
+  const body = document.getElementById('contactsBody');
+  if (!body) return;
+
+  if (!pageItems.length) {
+    body.innerHTML = '<tr><td colspan="7" class="empty">Nenhum contato encontrado.</td></tr>';
+    updateSelectedCount();
+    return;
+  }
+
+  body.innerHTML = pageItems.map((c, idx) => {
+    const globalNumber = startIdx + idx + 1;
+    const isEditingThis = editingId && String(editingId) === String(c.id);
+    const isChecked = selectedContactIds.has(String(c.id));
+    const tagsHtml = (c.tag || '').split(',').filter(Boolean).map(t => `<span class="tag">${esc(t.trim())}</span>`).join('');
+
+    return `<tr class="${isEditingThis ? 'editing-row' : ''}" data-row-id="${esc(String(c.id))}">
+      <td class="bulk-select-cell" style="display:${window.contactSelectionMode ? 'table-cell' : 'none'}">
+        <input type="checkbox" class="contact-row-select" style="width:17px;height:17px;cursor:pointer" data-select-id="${esc(String(c.id))}" ${isChecked ? 'checked' : ''} onchange="setContactSelected(this.dataset.selectId, this.checked)">
+      </td>
+      <td class="muted"><b>#${globalNumber}</b></td>
+      <td>
+        <b>${esc(c.name || 'Sem nome')}</b>
+        ${c.company ? `<span class="muted"> · ${esc(c.company)}</span>` : ''}
+        ${c.note ? `<br><span class="muted">${esc(c.note)}</span>` : ''}
+      </td>
+      <td>${esc(c.phone)}</td>
+      <td>${c.source ? `<span class="badge">${esc(c.source)}</span>` : '<span class="muted">—</span>'}</td>
+      <td>${tagsHtml || '<span class="muted">—</span>'}</td>
+      <td>
+        <div class="actions">
+          <button type="button" class="btn primary" data-contact-action="whatsapp" data-contact-id="${esc(String(c.id))}">WhatsApp</button>
+          <button type="button" class="btn secondary" data-contact-action="edit" data-contact-id="${esc(String(c.id))}">✏️ Editar</button>
+          <button type="button" class="btn danger" data-contact-action="delete" data-contact-id="${esc(String(c.id))}">Excluir</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  updateSelectedCount();
+  updateEditNavigationState();
+}
+
+// ============================================================================
+// EDIÇÃO DE CONTATOS + NAVEGAÇÃO "IR E VOLTAR" ENTRE CONTATOS
+// ============================================================================
+function findContactById(id) {
+  if (id === undefined || id === null) return null;
+  return contacts.find(x => String(x.id) === String(id)) || null;
+}
+
+function openContactForm(id = null, shouldScroll = true) {
+  const formEl = document.getElementById('contactForm');
+  const titleEl = document.getElementById('contactFormTitle');
+  const navGroup = document.getElementById('contactEditNav');
+  const counterBadge = document.getElementById('contactFormCounter');
+  const btnSaveNext = document.getElementById('btnSaveAndNext');
+
+  formEl.style.display = 'block';
+
+  if (id !== null && id !== undefined && String(id) !== '') {
+    const c = findContactById(id);
+    if (!c) {
+      editingId = null;
+      showToast('Contato não encontrado. Atualize a lista.', 'error');
+      return;
+    }
+    editingId = String(c.id);
+    document.getElementById('cName').value = c.name || '';
+    document.getElementById('cPhone').value = c.phone || '';
+    document.getElementById('cCompany').value = c.company || '';
+    document.getElementById('cTag').value = c.tag || '';
+    document.getElementById('cSource').value = c.source || '';
+    document.getElementById('cConsent').value = c.consent || 'pending';
+    document.getElementById('cNote').value = c.note || '';
+
+    titleEl.textContent = `Editando: ${c.name || 'Contato'}`;
+    navGroup.style.display = 'flex';
+    counterBadge.style.display = 'inline-block';
+    btnSaveNext.style.display = 'inline-flex';
+  } else {
+    editingId = null;
+    ['cName', 'cPhone', 'cCompany', 'cTag', 'cSource', 'cNote'].forEach(fieldId => {
+      const el = document.getElementById(fieldId);
+      if (el) el.value = '';
+    });
+    document.getElementById('cConsent').value = 'pending';
+    titleEl.textContent = 'Novo Contato';
+    navGroup.style.display = 'none';
+    counterBadge.style.display = 'none';
+    btnSaveNext.style.display = 'none';
+  }
+
+  renderContacts();
+  updateEditNavigationState();
+
+  // Rola suavemente até o formulário para que o usuário veja a edição mesmo clicando no 4º, 50º ou 500º contato!
+  if (shouldScroll) {
+    formEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    setTimeout(() => {
+      const nameInput = document.getElementById('cName');
+      if (nameInput) nameInput.focus();
+    }, 150);
+  }
+}
+
+// Atualiza o contador "Contato X de Y" e o estado dos botões Anterior / Próximo na edição
+function updateEditNavigationState() {
+  const navGroup = document.getElementById('contactEditNav');
+  const counterBadge = document.getElementById('contactFormCounter');
+  const btnPrev = document.getElementById('btnEditPrev');
+  const btnNext = document.getElementById('btnEditNext');
+
+  if (!editingId) {
+    if (navGroup) navGroup.style.display = 'none';
+    if (counterBadge) counterBadge.style.display = 'none';
+    return;
+  }
+
+  const list = getFilteredContacts();
+  const idx = list.findIndex(c => String(c.id) === String(editingId));
+
+  if (idx === -1) {
+    counterBadge.textContent = `Contato selecionado`;
+    if (btnPrev) btnPrev.disabled = true;
+    if (btnNext) btnNext.disabled = true;
+    return;
+  }
+
+  counterBadge.textContent = `Contato ${idx + 1} de ${list.length}`;
+  if (btnPrev) btnPrev.disabled = idx <= 0;
+  if (btnNext) btnNext.disabled = idx >= list.length - 1;
+}
+
+// Navega para o contato Anterior (-1) ou Próximo (+1) direto de dentro da tela de Editar
+function navigateEditingContact(direction) {
+  if (!editingId) return;
+  const list = getFilteredContacts();
+  const idx = list.findIndex(c => String(c.id) === String(editingId));
+  if (idx === -1) return;
+
+  const targetIdx = idx + direction;
+  if (targetIdx < 0 || targetIdx >= list.length) {
+    showToast(direction > 0 ? 'Você já está no último contato da lista.' : 'Você já está no primeiro contato da lista.');
+    return;
+  }
+
+  const targetContact = list[targetIdx];
+  // Garante que a página da tabela acompanhe o contato sendo editado
+  contactsPage = Math.floor(targetIdx / contactsPageSize) + 1;
+  openContactForm(targetContact.id, false);
+}
+
+function closeContactForm() {
+  document.getElementById('contactForm').style.display = 'none';
+  editingId = null;
+  renderContacts();
+}
+
+function saveContact(andGoNext = false) {
+  const name = document.getElementById('cName').value.trim();
+  const phone = normPhone(document.getElementById('cPhone').value);
+
+  if (!name || phone.length < 10) {
+    showToast('Informe o nome e um WhatsApp válido com DDD/DDI (mín. 10 dígitos).', 'error');
+    return;
+  }
+
+  const data = {
+    name,
+    phone,
+    company: document.getElementById('cCompany').value.trim(),
+    tag: document.getElementById('cTag').value.trim(),
+    source: document.getElementById('cSource').value.trim(),
+    consent: document.getElementById('cConsent').value || 'pending',
+    note: document.getElementById('cNote').value.trim()
+  };
+
+  if (editingId) {
+    const existing = findContactById(editingId);
+    if (!existing) {
+      showToast('Contato não encontrado.', 'error');
+      return;
+    }
+
+    // Se clicou em "Salvar e Ir para o Próximo", descobre quem é o próximo antes de salvar
+    let nextContactId = null;
+    if (andGoNext) {
+      const list = getFilteredContacts();
+      const currentIdx = list.findIndex(c => String(c.id) === String(editingId));
+      if (currentIdx !== -1 && currentIdx + 1 < list.length) {
+        nextContactId = list[currentIdx + 1].id;
+        contactsPage = Math.floor((currentIdx + 1) / contactsPageSize) + 1;
+      }
+    }
+
+    Object.assign(existing, data);
+    saveData();
+    showToast('Contato atualizado com sucesso!');
+
+    if (andGoNext && nextContactId) {
+      openContactForm(nextContactId, false);
+    } else if (andGoNext && !nextContactId) {
+      closeContactForm();
+      showToast('Último contato da lista salvo!');
+    } else {
+      closeContactForm();
+    }
+  } else {
+    data.id = generateUniqueId('c', contacts.length);
+    contacts.push(data);
+    closeContactForm();
+    saveData();
+    showToast('Novo contato cadastrado!');
+  }
+}
+
+// ============================================================================
+// SELEÇÃO DE CONTATOS E EXCLUSÃO (COM FECHAMENTO AUTOMÁTICO DA BARRA)
+// ============================================================================
+function toggleContactSelection() {
+  if (window.contactSelectionMode) {
+    closeContactSelectionMode();
+  } else {
+    openContactSelectionMode();
+  }
+}
+
+function openContactSelectionMode() {
+  window.contactSelectionMode = true;
+  const tools = document.getElementById('bulkContactTools');
+  if (tools) tools.style.display = 'flex';
+  const btn = document.getElementById('btnToggleSelect');
+  if (btn) {
+    btn.textContent = '✖ Sair da seleção';
+    btn.classList.add('primary');
+    btn.classList.remove('secondary');
+  }
+  renderContacts();
+  updateSelectedCount();
+}
+
+function closeContactSelectionMode(rerender = true) {
+  window.contactSelectionMode = false;
+  selectedContactIds.clear();
+  const tools = document.getElementById('bulkContactTools');
+  if (tools) tools.style.display = 'none';
+  const allCb = document.getElementById('selectVisibleContacts');
+  if (allCb) allCb.checked = false;
+  const btn = document.getElementById('btnToggleSelect');
+  if (btn) {
+    btn.textContent = '☑️ Selecionar contatos';
+    btn.classList.remove('primary');
+    btn.classList.add('secondary');
+  }
+  document.querySelectorAll('.bulk-select-cell').forEach(el => {
+    el.style.display = 'none';
+  });
+  if (rerender) {
+    renderContacts();
+    updateSelectedCount();
+  }
+}
+
+function setContactSelected(id, checked) {
+  id = String(id);
+  if (checked) selectedContactIds.add(id);
+  else selectedContactIds.delete(id);
+  updateSelectedCount();
+}
+
+function selectAllVisibleContacts(checked) {
+  document.querySelectorAll('#contactsBody .contact-row-select').forEach(cb => {
+    cb.checked = checked;
+    const id = String(cb.dataset.selectId);
+    if (checked) selectedContactIds.add(id);
+    else selectedContactIds.delete(id);
+  });
+  updateSelectedCount();
+}
+
+function selectAllFilteredContacts() {
+  const list = getFilteredContacts();
+  list.forEach(c => selectedContactIds.add(String(c.id)));
+  const allCb = document.getElementById('selectVisibleContacts');
+  if (allCb) allCb.checked = true;
+  renderContacts();
+  updateSelectedCount();
+  showToast(`${list.length} contato(s) selecionado(s).`);
+}
+
+function updateSelectedCount() {
+  const el = document.getElementById('selectedContactCount');
+  if (el) el.textContent = `${selectedContactIds.size} selecionado(s)`;
+
+  const visibleCbs = [...document.querySelectorAll('#contactsBody .contact-row-select')];
+  const allCb = document.getElementById('selectVisibleContacts');
+  if (allCb) {
+    allCb.checked = visibleCbs.length > 0 && visibleCbs.every(cb => cb.checked);
+  }
+}
+
+function deleteSelectedContacts() {
+  const ids = [...selectedContactIds];
+  if (!ids.length) {
+    showToast('Selecione pelo menos um contato para apagar.', 'error');
+    return;
+  }
+
+  askConfirm(
+    'Apagar contatos selecionados',
+    `Deseja realmente apagar os ${ids.length} contato(s) selecionado(s)? Esta ação não pode ser desfeita.`,
+    () => {
+      const idSet = new Set(ids.map(String));
+      contacts = contacts.filter(c => !idSet.has(String(c.id)));
+      if (editingId && idSet.has(String(editingId))) {
+        closeContactForm();
+      }
+      // Fecha e esconde automaticamente a barra de seleção após apagar!
+      closeContactSelectionMode(false);
+      saveData();
+      showToast(`${ids.length} contato(s) apagado(s) com sucesso.`);
+    },
+    'Sim, apagar selecionados'
+  );
+}
+
+function deleteAllContacts() {
+  if (!contacts.length) {
+    showToast('Não há contatos cadastrados para apagar.', 'error');
+    closeContactSelectionMode(false);
+    return;
+  }
+
+  askConfirm(
+    'Apagar TODOS os contatos',
+    `Tem certeza que deseja apagar TODOS os ${contacts.length} contatos do CRM? Esta ação limpará toda a sua lista de contatos.`,
+    () => {
+      contacts = [];
+      closeContactForm();
+      // Fecha e esconde automaticamente a barra de seleção após apagar tudo!
+      closeContactSelectionMode(false);
+      saveData();
+      showToast('Todos os contatos foram apagados.');
+    },
+    'Sim, apagar tudo'
+  );
+}
+
+// Eventos delegados da tabela de contatos (Editar, Excluir, WhatsApp)
+document.addEventListener('click', function (ev) {
+  const btn = ev.target.closest('[data-contact-action]');
+  if (!btn) return;
+  const id = btn.getAttribute('data-contact-id');
+  const action = btn.getAttribute('data-contact-action');
+
+  if (action === 'edit') {
+    openContactForm(id, true);
+  } else if (action === 'delete') {
+    const c = findContactById(id);
+    if (!c) return;
+    askConfirm(
+      'Excluir contato',
+      `Deseja excluir o contato "${c.name || c.phone}"?`,
+      () => {
+        contacts = contacts.filter(x => String(x.id) !== String(id));
+        selectedContactIds.delete(String(id));
+        if (editingId && String(editingId) === String(id)) closeContactForm();
+        saveData();
+        showToast('Contato excluído.');
+      },
+      'Excluir'
+    );
+  } else if (action === 'whatsapp') {
+    const c = findContactById(id);
+    if (c) openWhats(c, `Olá ${c.name || ''}!`);
+  }
 });
-function deleteContact(id){if(confirm('Excluir este contato?')){contacts=contacts.filter(c=>c.id!==id);saveData()}}
-function quickWhats(id){
- const c=contacts.find(x=>x.id===id); const msg='Olá '+c.name+'!';
- openWhats(c,msg);
-}
-function personalize(template,c){return template.replace(/\{\{\s*nome\s*\}\}/gi,c.name||'').replace(/\{\{\s*empresa\s*\}\}/gi,c.company||'');}
-function openWhats(c,msg){
- const phone=normPhone(c.phone); if(phone.length<10){alert('Número inválido.');return}
- history.unshift({date:new Date().toLocaleString('pt-BR'),contact:c.name,message:msg});
- saveData();
- window.open('https://wa.me/'+phone+'?text='+encodeURIComponent(msg),'_blank');
+
+// ============================================================================
+// WHATSAPP E CAMPANHAS (COM IR E VOLTAR ENTRE CONTATOS DA FILA)
+// ============================================================================
+function personalize(template, c) {
+  if (!c) return template || '';
+  return String(template || '')
+    .replace(/\{\{\s*nome\s*\}\}/gi, c.name || '')
+    .replace(/\{\{\s*empresa\s*\}\}/gi, c.company || '')
+    .replace(/\{\{\s*origem\s*\}\}/gi, c.source || '');
 }
 
-function updateCampaignMode(){
- const mode=document.getElementById('campaignMode').value;
- document.getElementById('campaignTag').style.display=mode==='tag'?'block':'none';
- document.getElementById('campaignSource').style.display=mode==='source'?'block':'none';
- document.getElementById('manualPicker').style.display=mode==='manual'?'block':'none';
- if(mode==='manual') renderManualPicker();
- updateAudience();
-}
-function renderManualPicker(){
- const box=document.getElementById('manualPicker');
- const type=document.getElementById('campaignType').value;
- const authorizedOnly=type==='marketing';
- box.innerHTML=contacts.map(c=>{
-   const blocked=authorizedOnly && c.consent!=='optin';
-   const status=c.consent==='optin'?'AUTORIZADO':c.consent==='optout'?'NÃO AUTORIZOU':'AGUARDANDO';
-   return `<label style="display:flex;gap:8px;align-items:center;font-weight:400;padding:7px;border-bottom:1px solid var(--line)">
-    <input type="checkbox" class="manualContact" value="${c.id}" ${blocked?'disabled':''}>
-    <span><b>${esc(c.name)}</b> — ${esc(c.phone)} <span class="badge">${status}</span>${c.source?' · '+esc(c.source):''}</span>
-   </label>`;
- }).join('') || '<div class="empty">Nenhum contato.</div>';
- box.querySelectorAll('.manualContact').forEach(x=>x.addEventListener('change',updateAudience));
-}
-function campaignCandidates(){
- const mode=document.getElementById('campaignMode').value;
- const type=document.getElementById('campaignType').value;
- const authorizedOnly=type==='marketing';
- if(mode==='manual'){
-   const ids=[...document.querySelectorAll('.manualContact:checked')].map(x=>x.value);
-   return contacts.filter(c=>ids.includes(c.id)&&(!authorizedOnly||c.consent==='optin'));
- }
- const tag=document.getElementById('campaignTag').value;
- const source=document.getElementById('campaignSource').value;
- return contacts.filter(c=>
-   (!authorizedOnly||c.consent==='optin') &&
-   (mode!=='tag'||(c.tag||'').split(',').map(x=>x.trim()).includes(tag)) &&
-   (mode!=='source'||(c.source||'')===source)
- );
-}
-function updateAudience(){
- const list=campaignCandidates();
- const type=document.getElementById('campaignType').value;
- document.getElementById('audienceCount').textContent=list.length+' contato(s) selecionado(s)';
- const warning=document.getElementById('audienceWarning');
- if(type==='marketing'){
-   warning.style.display='block';
-   warning.textContent='Campanhas de marketing são mostradas somente para contatos marcados como AUTORIZADO.';
- }else{
-   warning.style.display='block';
-   warning.textContent='Primeiro contato: você pode selecionar qualquer contato importado. Use uma mensagem de apresentação e peça autorização antes de enviar marketing.';
- }
- updatePreview();
-}
-function updateCampaignType(){
- const type=document.getElementById('campaignType').value;
- document.getElementById('consentHelper').textContent=type==='consent'
- ?'Mensagem inicial: explique a origem do contato e pergunte se a pessoa deseja receber informações. Marque a resposta como autorizada somente após uma resposta afirmativa.'
- :'Campanha de marketing: somente contatos com status AUTORIZADO são incluídos.';
- updateAudience();
-}
-
-function openCampaign(){
- const m=document.getElementById('campaignMessage').value.trim();
- if(!m){alert('Escreva a mensagem.');return}
- const type=document.getElementById('campaignType').value;
- if(type==='marketing') campaignQueue=campaignCandidates();
- else {
-  const mode=document.getElementById('campaignMode').value,tag=document.getElementById('campaignTag').value,source=document.getElementById('campaignSource').value;
-  const ids=mode==='manual'?[...document.querySelectorAll('.manualContact:checked')].map(x=>x.value):null;
-  campaignQueue=contacts.filter(c=>(!ids||ids.includes(c.id))&&(mode!=='tag'||(c.tag||'').split(',').map(x=>x.trim()).includes(tag))&&(mode!=='source'||(c.source||'')===source)).filter(c=>normPhone(c.phone).length>=10);
- }
- if(!campaignQueue.length){alert('Nenhum contato válido nessa seleção.');return}
- campaignProgress={active:true,items:campaignQueue.map(c=>({id:c.id,name:c.name,phone:c.phone,status:'Pendente'})),currentIndex:0,openedId:null};
- renderProgress();openCurrentCampaignContact();
-}
-function openCurrentCampaignContact(){
- if(!campaignProgress.active)return;
- const i=campaignProgress.items.findIndex(x=>x.status==='Pendente');
- if(i<0){campaignProgress.active=false;campaignProgress.openedId=null;renderProgress();alert('Lista concluída. Confira enviados confirmados, pulados e pendentes.');return}
- campaignProgress.currentIndex=i;
- const item=campaignProgress.items[i],c=contacts.find(x=>x.id===item.id);
- if(!c){item.status='Contato removido';renderProgress();return}
- const m=personalize(document.getElementById('campaignMessage').value,c);
- item.status='Conversa aberta';campaignProgress.openedId=item.id;
- history.unshift({date:new Date().toLocaleString('pt-BR'),contact:c.name,message:'[CONVERSA ABERTA] '+m});
- saveData();renderProgress();
- window.open('https://wa.me/'+normPhone(c.phone)+'?text='+encodeURIComponent(m),'_blank');
-}
-function markCurrentSent(){
- if(!campaignProgress.openedId){alert('Inicie uma campanha e abra uma conversa primeiro.');return}
- const item=campaignProgress.items.find(x=>x.id===campaignProgress.openedId);if(!item)return;
- item.status='Enviado (confirmado manualmente)';campaignProgress.openedId=null;
- const contact=contacts.find(c=>String(c.id)===String(item.id));
- const campaignName=(document.getElementById('campaignName')?.value||'Campanha sem nome').trim();
- sentDatabase.unshift({date:new Date().toLocaleString('pt-BR'),contact:item.name,phone:item.phone,campaign:campaignName,status:'Enviado (confirmado manualmente)',contactId:item.id});
- history.unshift({date:new Date().toLocaleString('pt-BR'),contact:item.name,message:'[ENVIO CONFIRMADO PELO USUÁRIO]'});
- saveData();renderProgress();openCurrentCampaignContact();
-}
-function skipCurrent(){
- if(!campaignProgress.openedId){alert('Não há contato aberto no controle da campanha.');return}
- const item=campaignProgress.items.find(x=>x.id===campaignProgress.openedId);if(item)item.status='Pulado';
- campaignProgress.openedId=null;renderProgress();openCurrentCampaignContact();
-}
-function resetProgress(){
- if(!confirm('Reiniciar o controle de progresso desta campanha?'))return;
- campaignProgress={active:false,items:[],currentIndex:0,openedId:null};renderProgress();
-}
-function renderProgress(){
- localStorage.setItem('crm_whatsapp_campaign_progress_v1',JSON.stringify(campaignProgress));
- const items=campaignProgress.items||[],sent=items.filter(x=>x.status==='Enviado (confirmado manualmente)').length,skipped=items.filter(x=>x.status==='Pulado').length,opened=items.filter(x=>x.status==='Conversa aberta').length,pending=items.filter(x=>x.status==='Pendente').length;
- const pct=items.length?Math.round((sent+skipped)/items.length*100):0;
- const summary=document.getElementById('progressSummary');if(summary)summary.textContent=items.length?`Total: ${items.length} · Enviados confirmados: ${sent} · Conversa aberta: ${opened} · Pulados: ${skipped} · Pendentes: ${pending}`:'Nenhuma campanha iniciada.';
- const bar=document.getElementById('progressBar');if(bar)bar.style.width=pct+'%';
-}
-function renderSentDatabase(){
- const body=document.getElementById('sentDbBody');if(!body)return;
- const q=(document.getElementById('sentSearch')?.value||'').toLowerCase();
- const rows=sentDatabase.filter(x=>(x.contact+' '+x.phone+' '+x.campaign).toLowerCase().includes(q));
- document.getElementById('sentDbCount').textContent=rows.length+' registro(s)';
- body.innerHTML=rows.length?rows.map(x=>`<tr><td>${esc(x.date)}</td><td>${esc(x.contact)}</td><td>${esc(x.phone)}</td><td>${esc(x.campaign)}</td><td>${esc(x.status)}</td></tr>`).join(''):'<tr><td colspan="5" class="empty">Nenhum envio registrado.</td></tr>';
-}
-function exportSentDatabase(){
- const rows=[['data_hora','contato','whatsapp','campanha','status','contact_id'],...sentDatabase.map(x=>[x.date,x.contact,x.phone,x.campaign,x.status,x.contactId])];
- const csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');
- const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download='banco_contatos_enviados.csv';a.click();
-}
-function clearSentDatabase(){if(confirm('Apagar todos os registros do banco de enviados? Esta ação não pode ser desfeita.')){sentDatabase=[];saveData();}}
-
-function renderHistory(){
- const b=document.getElementById('historyBody');b.innerHTML=history.length?history.slice(0,200).map(h=>`<tr><td>${esc(h.date)}</td><td>${esc(h.contact)}</td><td>${esc(h.message)}</td></tr>`).join(''):'<tr><td colspan="3" class="empty">Nenhuma ação registrada.</td></tr>';
-}
-function parseCSVLine(line, sep){
- let out=[],cur='',quoted=false;
- for(let i=0;i<line.length;i++){const ch=line[i]; if(ch==='"'){if(quoted&&line[i+1]==='"'){cur+='"';i++;}else quoted=!quoted;} else if(ch===sep&&!quoted){out.push(cur);cur='';} else cur+=ch;} out.push(cur); return out;
-}
-function normalizeHeader(h){return String(h||'').replace(/^\ufeff/,'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'');}
-function importCSV(e){const file=e.target.files[0];if(file)importCSVFile(file,null);e.target.value=''}
-function parseCSVLine(line,sep){let out=[],cur='',quoted=false;for(let i=0;i<line.length;i++){const ch=line[i];if(ch==='"'){if(quoted&&line[i+1]==='"'){cur+='"';i++}else quoted=!quoted}else if(ch===sep&&!quoted){out.push(cur);cur=''}else cur+=ch}out.push(cur);return out}
-function importCSVFile(file,forcedSource){
- const reader=new FileReader();
- reader.onload=ev=>{
-  const text=String(ev.target.result||'').replace(/^\ufeff/,'');const lines=text.split(/\r?\n/).filter(x=>x.trim());if(!lines.length)return;
-  const sep=lines[0].includes(';')?';':',';const headers=parseCSVLine(lines[0],sep).map(x=>x.trim().toLowerCase());
-  const idx=names=>headers.findIndex(h=>names.includes(h));
-  const ni=idx(['nome','name','saved name','savedname']),pi=idx(['whatsapp','telefone','phone','phone number','formatted phone','numero','número']),ci=idx(['empresa','company']),ti=idx(['tag','tags','labels']),gi=idx(['group name','grupo','grupo name']),si=idx(['origem','source']);
-  if(pi<0){alert('Não encontrei uma coluna de telefone/WhatsApp.');return}
-  let added=0,updated=0;
-  for(let i=1;i<lines.length;i++){
-   const cols=parseCSVLine(lines[i],sep),phone=normPhone(cols[pi]||'');if(phone.length<10)continue;
-   const name=(ni>=0?cols[ni]:'Sem nome')||'Sem nome', source=forcedSource || (si>=0?cols[si]:'') || (gi>=0?cols[gi]:'') || file.name.replace(/\.[^.]+$/,'');
-   const existing=contacts.find(c=>normPhone(c.phone)===phone);
-   const data={name,phone,company:ci>=0?(cols[ci]||''):'',tag:ti>=0?(cols[ti]||''):'',source,note:'',consent:existing?.consent||'pending'};
-   if(existing){
-   if(existing.id===undefined||existing.id===null||String(existing.id)===''||String(existing.id)==='undefined'||String(existing.id)==='null')existing.id='import_'+Date.now()+'_'+i+'_'+Math.random().toString(36).slice(2);
-   Object.assign(existing,data);updated++;
-  }else{
-   data.id=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():'import_'+Date.now()+'_'+i+'_'+Math.random().toString(36).slice(2);
-   contacts.push(data);added++;
+function openWhats(c, msg) {
+  const phone = normPhone(c.phone);
+  if (phone.length < 10) {
+    showToast('Número de WhatsApp inválido.', 'error');
+    return;
   }
-  }
-  saveData();renderSources();renderConsent();alert(`${added} novo(s) e ${updated} atualizado(s). Origem: ${forcedSource||file.name}`);
- };
- reader.readAsText(file,'UTF-8');
+  history.unshift({
+    date: new Date().toLocaleString('pt-BR'),
+    contact: c.name || phone,
+    message: msg
+  });
+  saveData();
+  window.open('https://wa.me/' + phone + '?text=' + encodeURIComponent(msg), '_blank');
 }
 
-function downloadCSV(){
- const rows=[['nome','whatsapp','empresa','tag','origem','consentimento','observacao'],...contacts.map(c=>[c.name,c.phone,c.company,c.tag,c.source,c.consent,c.note])];
- const csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');
- const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download='contatos_crm_whatsapp.csv';a.click();
+function updateCampaignMode() {
+  const modeEl = document.getElementById('campaignMode');
+  if (!modeEl) return;
+  const mode = modeEl.value;
+  document.getElementById('campaignTag').style.display = mode === 'tag' ? 'block' : 'none';
+  document.getElementById('campaignSource').style.display = mode === 'source' ? 'block' : 'none';
+  document.getElementById('manualPicker').style.display = mode === 'manual' ? 'block' : 'none';
+  if (mode === 'manual') renderManualPicker();
+  updateAudience();
 }
-normalizeContactIds();saveData();renderSources();renderConsent();updateCampaignMode();updateCampaignType();updatePreview();renderProgress();renderSentDatabase();
+
+function renderManualPicker() {
+  const box = document.getElementById('manualPicker');
+  if (!box) return;
+  const type = document.getElementById('campaignType')?.value || 'consent';
+  const authorizedOnly = type === 'marketing';
+
+  box.innerHTML = contacts.map(c => {
+    const blocked = authorizedOnly && c.consent !== 'optin';
+    const status = c.consent === 'optin' ? 'AUTORIZADO' : c.consent === 'optout' ? 'NÃO AUTORIZOU' : 'AGUARDANDO';
+    return `<label style="display:flex;gap:8px;align-items:center;font-weight:400;padding:7px;border-bottom:1px solid var(--line);margin:0;cursor:pointer">
+      <input type="checkbox" class="manualContact" style="width:16px;height:16px" value="${esc(String(c.id))}" ${blocked ? 'disabled' : ''}>
+      <span><b>${esc(c.name)}</b> — ${esc(c.phone)} <span class="badge">${status}</span>${c.source ? ' · ' + esc(c.source) : ''}</span>
+    </label>`;
+  }).join('') || '<div class="empty">Nenhum contato cadastrado.</div>';
+
+  box.querySelectorAll('.manualContact').forEach(x => x.addEventListener('change', updateAudience));
+}
+
+function campaignCandidates() {
+  const mode = document.getElementById('campaignMode')?.value || 'all';
+  const type = document.getElementById('campaignType')?.value || 'consent';
+  const authorizedOnly = type === 'marketing';
+
+  if (mode === 'manual') {
+    const ids = [...document.querySelectorAll('.manualContact:checked')].map(x => String(x.value));
+    return contacts.filter(c => ids.includes(String(c.id)) && (!authorizedOnly || c.consent === 'optin') && normPhone(c.phone).length >= 10);
+  }
+
+  const tag = document.getElementById('campaignTag')?.value || '';
+  const source = document.getElementById('campaignSource')?.value || '';
+
+  return contacts.filter(c =>
+    normPhone(c.phone).length >= 10 &&
+    (!authorizedOnly || c.consent === 'optin') &&
+    (mode !== 'tag' || !tag || (c.tag || '').split(',').map(x => x.trim()).includes(tag)) &&
+    (mode !== 'source' || !source || (c.source || '') === source)
+  );
+}
+
+function updateAudience() {
+  const list = campaignCandidates();
+  const type = document.getElementById('campaignType')?.value || 'consent';
+  const countEl = document.getElementById('audienceCount');
+  if (countEl) countEl.textContent = `${list.length} contato(s) apto(s)`;
+
+  const warning = document.getElementById('audienceWarning');
+  if (warning) {
+    warning.textContent = type === 'marketing'
+      ? 'Modo marketing: exibe apenas contatos com status AUTORIZADO.'
+      : 'Primeiro contato: permite apresentar-se e pedir autorização.';
+  }
+  updatePreview();
+}
+
+function updateCampaignType() {
+  const type = document.getElementById('campaignType')?.value || 'consent';
+  const helper = document.getElementById('consentHelper');
+  if (helper) {
+    helper.textContent = type === 'consent'
+      ? 'Mensagem inicial: explique a origem do contato e pergunte se a pessoa deseja receber informações.'
+      : 'Campanha de marketing: somente contatos com status AUTORIZADO são incluídos.';
+  }
+  if (document.getElementById('campaignMode')?.value === 'manual') {
+    renderManualPicker();
+  }
+  updateAudience();
+}
+
+function updatePreview() {
+  const msgEl = document.getElementById('campaignMessage');
+  const previewEl = document.getElementById('preview');
+  const charCountEl = document.getElementById('charCount');
+  const previewNameEl = document.getElementById('previewContactName');
+  if (!msgEl || !previewEl) return;
+
+  const raw = msgEl.value;
+  if (charCountEl) charCountEl.textContent = `${raw.length} caracteres`;
+
+  // Usa o contato ativo da fila da campanha ou o primeiro candidato como exemplo
+  let sampleContact = null;
+  if (campaignProgress.active && campaignProgress.items[campaignProgress.currentIndex]) {
+    const activeItem = campaignProgress.items[campaignProgress.currentIndex];
+    sampleContact = findContactById(activeItem.id);
+  }
+  if (!sampleContact) {
+    const candidates = campaignCandidates();
+    sampleContact = candidates[0] || contacts[0] || { name: 'João Silva', company: 'Empresa Exemplo', source: 'Grupo Condomínio' };
+  }
+
+  if (previewNameEl) previewNameEl.textContent = sampleContact.name || 'Exemplo';
+  previewEl.textContent = raw.trim() ? personalize(raw, sampleContact) : 'Sua mensagem aparecerá aqui.';
+}
+
+function handleCampaignImage(ev) {
+  const file = ev.target.files?.[0];
+  const box = document.getElementById('imagePreview');
+  if (!box) return;
+  if (!file) {
+    box.innerHTML = '';
+    return;
+  }
+  const url = URL.createObjectURL(file);
+  box.innerHTML = `<div style="display:flex;align-items:center;gap:12px;background:#f8fafb;padding:10px;border-radius:8px;border:1px solid var(--line)">
+    <img src="${url}" alt="Prévia" style="max-height:70px;border-radius:6px">
+    <div class="muted"><b>${esc(file.name)}</b><br>Anexe esta imagem manualmente ao abrir a conversa no WhatsApp.</div>
+  </div>`;
+}
+
+function openCampaign() {
+  const m = document.getElementById('campaignMessage').value.trim();
+  if (!m) {
+    showToast('Escreva a mensagem da campanha antes de iniciar.', 'error');
+    return;
+  }
+  const list = campaignCandidates();
+  if (!list.length) {
+    showToast('Nenhum contato válido encontrado para este filtro.', 'error');
+    return;
+  }
+
+  campaignProgress = {
+    active: true,
+    items: list.map(c => ({
+      id: String(c.id),
+      name: c.name,
+      phone: c.phone,
+      status: 'Pendente'
+    })),
+    currentIndex: 0,
+    openedId: String(list[0].id)
+  };
+  renderProgress();
+  updatePreview();
+  openActiveQueueContactWhats();
+}
+
+// Ir e Voltar entre contatos da fila de campanha (-1 para voltar, +1 para avançar)
+function navigateCampaignQueue(direction) {
+  if (!campaignProgress.items || !campaignProgress.items.length) {
+    showToast('Inicie ou carregue uma fila de campanha primeiro.', 'error');
+    return;
+  }
+  const nextIndex = campaignProgress.currentIndex + direction;
+  if (nextIndex < 0 || nextIndex >= campaignProgress.items.length) {
+    showToast(direction > 0 ? 'Você já está no último contato da fila.' : 'Você já está no primeiro contato da fila.');
+    return;
+  }
+  campaignProgress.currentIndex = nextIndex;
+  campaignProgress.openedId = campaignProgress.items[nextIndex].id;
+  campaignProgress.active = true;
+  renderProgress();
+  updatePreview();
+}
+
+function openActiveQueueContactWhats() {
+  if (!campaignProgress.items || !campaignProgress.items.length) {
+    openCampaign();
+    return;
+  }
+  const idx = Math.min(Math.max(0, campaignProgress.currentIndex || 0), campaignProgress.items.length - 1);
+  campaignProgress.currentIndex = idx;
+  const item = campaignProgress.items[idx];
+  const c = findContactById(item.id) || item;
+  const m = personalize(document.getElementById('campaignMessage').value, c);
+
+  if (item.status === 'Pendente') item.status = 'Conversa aberta';
+  campaignProgress.openedId = item.id;
+
+  history.unshift({
+    date: new Date().toLocaleString('pt-BR'),
+    contact: c.name,
+    message: '[CAMPANHA] ' + m
+  });
+  saveData();
+  renderProgress();
+  window.open('https://wa.me/' + normPhone(c.phone) + '?text=' + encodeURIComponent(m), '_blank');
+}
+
+function markCurrentSent() {
+  if (!campaignProgress.items || !campaignProgress.items.length) {
+    showToast('Inicie uma campanha primeiro.', 'error');
+    return;
+  }
+  const item = campaignProgress.items[campaignProgress.currentIndex];
+  if (!item) return;
+
+  item.status = 'Enviado (confirmado manualmente)';
+  const campaignName = (document.getElementById('campaignName')?.value || 'Campanha sem nome').trim();
+
+  sentDatabase.unshift({
+    date: new Date().toLocaleString('pt-BR'),
+    contact: item.name,
+    phone: item.phone,
+    campaign: campaignName,
+    status: 'Enviado (confirmado manualmente)',
+    contactId: item.id
+  });
+  history.unshift({
+    date: new Date().toLocaleString('pt-BR'),
+    contact: item.name,
+    message: '[ENVIO CONFIRMADO] ' + campaignName
+  });
+
+  saveData();
+
+  // Avança automaticamente para o próximo se houver
+  if (campaignProgress.currentIndex + 1 < campaignProgress.items.length) {
+    campaignProgress.currentIndex += 1;
+    campaignProgress.openedId = campaignProgress.items[campaignProgress.currentIndex].id;
+    renderProgress();
+    updatePreview();
+    showToast('Marcado como enviado! Avançando para o próximo contato.');
+  } else {
+    renderProgress();
+    showToast('Último contato da fila marcado como enviado! Campanha concluída.');
+  }
+}
+
+function skipCurrent() {
+  if (!campaignProgress.items || !campaignProgress.items.length) {
+    showToast('Não há campanha ativa.', 'error');
+    return;
+  }
+  const item = campaignProgress.items[campaignProgress.currentIndex];
+  if (item) item.status = 'Pulado';
+
+  if (campaignProgress.currentIndex + 1 < campaignProgress.items.length) {
+    campaignProgress.currentIndex += 1;
+    campaignProgress.openedId = campaignProgress.items[campaignProgress.currentIndex].id;
+    showToast('Contato pulado. Indo para o próximo.');
+  } else {
+    showToast('Contato pulado. Fim da fila.');
+  }
+  renderProgress();
+  updatePreview();
+}
+
+function resetProgress() {
+  askConfirm(
+    'Reiniciar fila da campanha',
+    'Deseja zerar o progresso atual da fila de campanha?',
+    () => {
+      campaignProgress = { active: false, items: [], currentIndex: 0, openedId: null };
+      renderProgress();
+      showToast('Fila de campanha reiniciada.');
+    },
+    'Reiniciar'
+  );
+}
+
+function renderProgress() {
+  localStorage.setItem(PROGKEY, JSON.stringify(campaignProgress));
+  const items = campaignProgress.items || [];
+  const sent = items.filter(x => x.status === 'Enviado (confirmado manualmente)').length;
+  const skipped = items.filter(x => x.status === 'Pulado').length;
+  const opened = items.filter(x => x.status === 'Conversa aberta').length;
+  const pending = items.filter(x => x.status === 'Pendente').length;
+  const pct = items.length ? Math.round(((sent + skipped) / items.length) * 100) : 0;
+
+  const summary = document.getElementById('progressSummary');
+  if (summary) {
+    summary.textContent = items.length
+      ? `Total: ${items.length} · Enviados: ${sent} · Abertos: ${opened} · Pulados: ${skipped} · Pendentes: ${pending}`
+      : 'Nenhuma campanha iniciada.';
+  }
+  const bar = document.getElementById('progressBar');
+  if (bar) bar.style.width = pct + '%';
+
+  const posLabel = document.getElementById('queuePositionLabel');
+  const nameLabel = document.getElementById('queueCurrentName');
+  const phoneLabel = document.getElementById('queueCurrentPhone');
+  const statusBadge = document.getElementById('queueCurrentStatus');
+  const btnPrev = document.getElementById('btnCampPrev');
+  const btnNext = document.getElementById('btnCampNext');
+
+  if (!items.length) {
+    if (posLabel) posLabel.textContent = 'Fila vazia';
+    if (nameLabel) nameLabel.textContent = 'Clique em "Iniciar / Carregar Fila" para começar';
+    if (phoneLabel) phoneLabel.textContent = '';
+    if (statusBadge) statusBadge.textContent = 'Aguardando';
+    if (btnPrev) btnPrev.disabled = true;
+    if (btnNext) btnNext.disabled = true;
+    return;
+  }
+
+  const idx = Math.min(Math.max(0, campaignProgress.currentIndex || 0), items.length - 1);
+  const current = items[idx];
+  if (posLabel) posLabel.textContent = `Contato ${idx + 1} de ${items.length} na fila`;
+  if (nameLabel) nameLabel.textContent = current.name || 'Sem nome';
+  if (phoneLabel) phoneLabel.textContent = `WhatsApp: ${current.phone}`;
+  if (statusBadge) statusBadge.textContent = current.status;
+  if (btnPrev) btnPrev.disabled = idx <= 0;
+  if (btnNext) btnNext.disabled = idx >= items.length - 1;
+}
+
+// ============================================================================
+// GRUPOS / ORIGENS E CONSENTIMENTO
+// ============================================================================
+function renderSources() {
+  const box = document.getElementById('sourcesBody');
+  if (!box) return;
+
+  const groups = {};
+  contacts.forEach(c => {
+    const src = (c.source || 'Sem origem definida').trim() || 'Sem origem definida';
+    if (!groups[src]) groups[src] = [];
+    groups[src].push(c);
+  });
+
+  const keys = Object.keys(groups).sort();
+  if (!keys.length) {
+    box.innerHTML = '<div class="empty">Nenhuma origem cadastrada ainda. Importe um arquivo CSV para começar.</div>';
+    return;
+  }
+
+  box.innerHTML = `<table>
+    <thead><tr><th>Origem / Grupo</th><th>Quantidade de Contatos</th><th>Ações</th></tr></thead>
+    <tbody>
+      ${keys.map(src => `<tr>
+        <td><b>${esc(src)}</b></td>
+        <td><span class="badge">${groups[src].length} contato(s)</span></td>
+        <td>
+          <div class="actions">
+            <button type="button" class="btn secondary" onclick="filterContactsBySource('${esc(src.replace(/'/g, "\\'"))}')">👥 Ver contatos</button>
+          </div>
+        </td>
+      </tr>`).join('')}
+    </tbody>
+  </table>`;
+}
+
+function filterContactsBySource(src) {
+  const actualSrc = src === 'Sem origem definida' ? '' : src;
+  const sf = document.getElementById('sourceFilter');
+  if (sf) sf.value = actualSrc;
+  contactsPage = 1;
+  renderContacts();
+  const navBtn = document.querySelectorAll('.nav button')[1];
+  showPage('contacts', navBtn);
+}
+
+function importNewSourceCSV(ev) {
+  const file = ev.target.files?.[0];
+  if (!file) return;
+  const customSource = (document.getElementById('newSourceNameInput')?.value || '').trim() || file.name.replace(/\.[^.]+$/, '');
+  importCSVFile(file, customSource);
+  ev.target.value = '';
+}
+
+function exportBySource() {
+  if (!contacts.length) {
+    showToast('Não há contatos para exportar.', 'error');
+    return;
+  }
+  downloadCSV();
+}
+
+function renderConsent() {
+  const optin = contacts.filter(c => c.consent === 'optin').length;
+  const optout = contacts.filter(c => c.consent === 'optout').length;
+  const noresp = contacts.filter(c => c.consent === 'noresponse').length;
+  const pending = contacts.length - optin - optout - noresp;
+
+  const elIn = document.getElementById('statOptIn');
+  const elPend = document.getElementById('statPending');
+  const elOut = document.getElementById('statOptOut');
+  const elNo = document.getElementById('statNoResponse');
+  if (elIn) elIn.textContent = optin;
+  if (elPend) elPend.textContent = pending;
+  if (elOut) elOut.textContent = optout;
+  if (elNo) elNo.textContent = noresp;
+
+  const body = document.getElementById('consentBody');
+  if (!body) return;
+
+  if (!contacts.length) {
+    body.innerHTML = '<tr><td colspan="5" class="empty">Nenhum contato cadastrado.</td></tr>';
+    return;
+  }
+
+  body.innerHTML = contacts.slice(0, 300).map(c => {
+    const st = c.consent || 'pending';
+    const label = st === 'optin' ? 'Autorizado' : st === 'optout' ? 'Não autorizou' : st === 'noresponse' ? 'Sem resposta' : 'Aguardando';
+    return `<tr>
+      <td><b>${esc(c.name)}</b></td>
+      <td>${esc(c.phone)}</td>
+      <td>${esc(c.source || '—')}</td>
+      <td><span class="badge ${esc(st)}">${label}</span></td>
+      <td>
+        <div class="actions">
+          <button type="button" class="btn primary" style="padding:6px 10px;font-size:12px" onclick="setContactConsent('${esc(String(c.id))}','optin')">Autorizou</button>
+          <button type="button" class="btn secondary" style="padding:6px 10px;font-size:12px" onclick="setContactConsent('${esc(String(c.id))}','pending')">Aguardando</button>
+          <button type="button" class="btn secondary" style="padding:6px 10px;font-size:12px" onclick="setContactConsent('${esc(String(c.id))}','noresponse')">Sem resposta</button>
+          <button type="button" class="btn danger" style="padding:6px 10px;font-size:12px" onclick="setContactConsent('${esc(String(c.id))}','optout')">Não autorizou</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function setContactConsent(id, status) {
+  const c = findContactById(id);
+  if (!c) return;
+  c.consent = status;
+  saveData();
+  showToast(`Consentimento de ${c.name} atualizado.`);
+}
+
+// ============================================================================
+// BANCO DE ENVIADOS E HISTÓRICO
+// ============================================================================
+function renderSentDatabase() {
+  const body = document.getElementById('sentDbBody');
+  if (!body) return;
+  const q = (document.getElementById('sentSearch')?.value || '').toLowerCase();
+  const rows = sentDatabase.filter(x => `${x.contact || ''} ${x.phone || ''} ${x.campaign || ''}`.toLowerCase().includes(q));
+  document.getElementById('sentDbCount').textContent = `${rows.length} registro(s)`;
+  body.innerHTML = rows.length
+    ? rows.map(x => `<tr><td>${esc(x.date)}</td><td>${esc(x.contact)}</td><td>${esc(x.phone)}</td><td>${esc(x.campaign)}</td><td>${esc(x.status)}</td></tr>`).join('')
+    : '<tr><td colspan="5" class="empty">Nenhum envio registrado.</td></tr>';
+}
+
+function exportSentDatabase() {
+  const rows = [
+    ['data_hora', 'contato', 'whatsapp', 'campanha', 'status', 'contact_id'],
+    ...sentDatabase.map(x => [x.date, x.contact, x.phone, x.campaign, x.status, x.contactId])
+  ];
+  const csv = rows.map(r => r.map(v => '"' + String(v ?? '').replace(/"/g, '""') + '"').join(';')).join('\r\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' }));
+  a.download = 'banco_contatos_enviados.csv';
+  a.click();
+}
+
+function clearSentDatabase() {
+  if (!sentDatabase.length) {
+    showToast('O banco de enviados já está vazio.');
+    return;
+  }
+  askConfirm(
+    'Limpar banco de enviados',
+    'Apagar todos os registros do banco de enviados? Esta ação não pode ser desfeita.',
+    () => {
+      sentDatabase = [];
+      saveData();
+      showToast('Banco de enviados limpo.');
+    },
+    'Limpar tudo'
+  );
+}
+
+function renderHistory() {
+  const b = document.getElementById('historyBody');
+  if (!b) return;
+  b.innerHTML = history.length
+    ? history.slice(0, 200).map(h => `<tr><td>${esc(h.date)}</td><td>${esc(h.contact)}</td><td>${esc(h.message)}</td></tr>`).join('')
+    : '<tr><td colspan="3" class="empty">Nenhuma ação registrada.</td></tr>';
+}
+
+// ============================================================================
+// IMPORTAÇÃO E EXPORTAÇÃO CSV INTELIGENTE
+// ============================================================================
+function parseCSVLine(line, sep) {
+  let out = [], cur = '', quoted = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      if (quoted && line[i + 1] === '"') {
+        cur += '"';
+        i++;
+      } else {
+        quoted = !quoted;
+      }
+    } else if (ch === sep && !quoted) {
+      out.push(cur);
+      cur = '';
+    } else {
+      cur += ch;
+    }
+  }
+  out.push(cur);
+  return out;
+}
+
+function importCSV(e) {
+  const file = e.target.files?.[0];
+  if (file) importCSVFile(file, null);
+  e.target.value = '';
+}
+
+function importCSVFile(file, forcedSource) {
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const text = String(ev.target.result || '').replace(/^\ufeff/, '');
+    const lines = text.split(/\r?\n/).filter(x => x.trim());
+    if (!lines.length) {
+      showToast('O arquivo CSV está vazio.', 'error');
+      return;
+    }
+
+    const sep = lines[0].includes(';') ? ';' : ',';
+    const headers = parseCSVLine(lines[0], sep).map(x => x.trim().toLowerCase().replace(/^"|"$/g, ''));
+
+    const findCol = possibleNames => headers.findIndex(h => possibleNames.includes(h) || possibleNames.some(p => h.includes(p)));
+
+    const ni = findCol(['nome', 'name', 'saved name', 'savedname', 'first name', 'display name', 'contato']);
+    let pi = findCol(['whatsapp', 'telefone', 'phone', 'phone number', 'formatted phone', 'numero', 'número', 'celular', 'mobile']);
+    const ci = findCol(['empresa', 'company', 'organization']);
+    const ti = findCol(['tag', 'tags', 'labels', 'categoria']);
+    const gi = findCol(['group name', 'grupo', 'grupo name']);
+    const si = findCol(['origem', 'source']);
+    const noteIdx = findCol(['observacao', 'observação', 'note', 'notes']);
+
+    // Caso o CSV não tenha cabeçalho padrão, tenta detectar a coluna que contém números de telefone na segunda linha
+    let startRow = 1;
+    if (pi < 0 && lines.length >= 1) {
+      const testCols = parseCSVLine(lines[0], sep);
+      const guessedPhoneIdx = testCols.findIndex(col => normPhone(col).length >= 10);
+      if (guessedPhoneIdx >= 0) {
+        pi = guessedPhoneIdx;
+        startRow = 0; // Primeira linha já é dado
+      }
+    }
+
+    if (pi < 0) {
+      showToast('Não encontrei uma coluna de Telefone/WhatsApp no CSV.', 'error');
+      return;
+    }
+
+    let added = 0, updated = 0;
+    for (let i = startRow; i < lines.length; i++) {
+      const cols = parseCSVLine(lines[i], sep);
+      const phone = normPhone(cols[pi] || '');
+      if (phone.length < 10) continue;
+
+      const rawName = (ni >= 0 && ni !== pi ? (cols[ni] || '').trim() : '') || `Contato ${phone.slice(-4)}`;
+      const source = forcedSource || (si >= 0 ? (cols[si] || '').trim() : '') || (gi >= 0 ? (cols[gi] || '').trim() : '') || file.name.replace(/\.[^.]+$/, '');
+      const existing = contacts.find(c => normPhone(c.phone) === phone);
+
+      const data = {
+        name: rawName,
+        phone,
+        company: ci >= 0 ? (cols[ci] || '').trim() : (existing?.company || ''),
+        tag: ti >= 0 ? (cols[ti] || '').trim() : (existing?.tag || ''),
+        source: source || (existing?.source || ''),
+        note: noteIdx >= 0 ? (cols[noteIdx] || '').trim() : (existing?.note || ''),
+        consent: existing?.consent || 'pending'
+      };
+
+      if (existing) {
+        Object.assign(existing, data);
+        if (!existing.id) existing.id = generateUniqueId('import', i);
+        updated++;
+      } else {
+        data.id = generateUniqueId('import', i);
+        contacts.push(data);
+        added++;
+      }
+    }
+
+    normalizeContactIds();
+    saveData();
+    showToast(`Importação concluída: ${added} novo(s) e ${updated} atualizado(s)!`);
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+function downloadCSV() {
+  const rows = [
+    ['nome', 'whatsapp', 'empresa', 'tag', 'origem', 'consentimento', 'observacao'],
+    ...contacts.map(c => [c.name, c.phone, c.company, c.tag, c.source, c.consent, c.note])
+  ];
+  const csv = rows.map(r => r.map(v => '"' + String(v ?? '').replace(/"/g, '""') + '"').join(';')).join('\r\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' }));
+  a.download = 'contatos_crm_whatsapp.csv';
+  a.click();
+}
+
+// Inicialização segura
+window.addEventListener('DOMContentLoaded', () => {
+  normalizeContactIds();
+  saveData();
+  updateCampaignMode();
+  updateCampaignType();
+  updatePreview();
+  renderProgress();
+});
 </script>
 </body>
 </html>
