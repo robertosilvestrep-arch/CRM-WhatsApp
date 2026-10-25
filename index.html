@@ -22,13 +22,47 @@
   --warn-text: #735d00;
 }
 * { box-sizing: border-box; }
-body { margin: 0; font-family: 'Inter', Arial, Helvetica, sans-serif; background: var(--bg); color: var(--text); padding-bottom: 70px; }
+body { margin: 0; font-family: 'Inter', Arial, Helvetica, sans-serif; background: var(--bg); color: var(--text); padding-bottom: 30px; }
 .app { display: flex; min-height: 100vh; }
-.sidebar { width: 240px; background: var(--dark); color: #fff; padding: 22px 14px; position: fixed; top: 0; bottom: 0; overflow-y: auto; z-index: 20; }
+.sidebar { width: 240px; background: var(--dark); color: #fff; padding: 22px 14px; position: fixed; top: 0; bottom: 0; overflow-y: auto; z-index: 20; display: flex; flex-direction: column; justify-content: space-between; gap: 18px; }
 .logo { font-size: 20px; font-weight: 800; padding: 0 10px 25px; letter-spacing: -0.5px; }
 .logo span { color: #35d47a; }
 .nav button { display: block; width: 100%; border: 0; background: transparent; color: #d9e1e6; text-align: left; padding: 12px 14px; border-radius: 8px; margin: 4px 0; cursor: pointer; font-size: 14px; transition: all 0.15s ease; }
 .nav button.active, .nav button:hover { background: #25343f; color: #fff; font-weight: 600; }
+.sidebar-cloud-box {
+  background: #202e3a;
+  border: 1px solid #2e4150;
+  border-radius: 10px;
+  padding: 12px;
+  margin-top: auto;
+  font-size: 12.5px;
+}
+.sidebar-cloud-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+.sidebar-cloud-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.sidebar-cloud-actions .btn {
+  padding: 7px 8px;
+  font-size: 11.5px;
+  width: 100%;
+}
+.sidebar-cloud-actions .btn-config {
+  grid-column: 1 / -1;
+  background: #2b3d4d;
+  color: #fff;
+}
+.sidebar-cloud-actions .btn-config:hover {
+  background: #364c5f;
+}
 .main { margin-left: 240px; width: calc(100% - 240px); padding: 28px; max-width: 1500px; }
 .page { display: none; }
 .page.active { display: block; }
@@ -178,7 +212,7 @@ tr.inline-edit-holder td {
 /* Modal e Toast customizados (sem alert/confirm bloqueantes) */
 .toast-container {
   position: fixed;
-  bottom: 74px;
+  bottom: 22px;
   right: 22px;
   z-index: 9999;
   display: flex;
@@ -240,15 +274,30 @@ tr.inline-edit-holder td {
 
 <div class="app">
   <aside class="sidebar">
-    <div class="logo">CRM <span>WhatsApp</span></div>
-    <div class="nav">
-      <button class="active" onclick="showPage('dashboard',this)">📊 Dashboard</button>
-      <button onclick="showPage('contacts',this)">👥 Contatos</button>
-      <button onclick="showPage('campaign',this)">📣 Campanhas</button>
-      <button onclick="showPage('consent',this)">✅ Consentimento</button>
-      <button onclick="showPage('sources',this)">📁 Grupos/Origens</button>
-      <button onclick="showPage('history',this)">🕘 Histórico</button>
-      <button onclick="showPage('sentdb',this)">🗄️ Banco de enviados</button>
+    <div>
+      <div class="logo">CRM <span>WhatsApp</span></div>
+      <div class="nav">
+        <button class="active" onclick="showPage('dashboard',this)">📊 Dashboard</button>
+        <button onclick="showPage('contacts',this)">👥 Contatos</button>
+        <button onclick="showPage('campaign',this)">📣 Campanhas</button>
+        <button onclick="showPage('consent',this)">✅ Consentimento</button>
+        <button onclick="showPage('sources',this)">📁 Grupos/Origens</button>
+        <button onclick="showPage('history',this)">🕘 Histórico</button>
+        <button onclick="showPage('sentdb',this)">🗄️ Banco de enviados</button>
+      </div>
+    </div>
+
+    <!-- PAINEL DE SINCRONIZAÇÃO NA NUVEM FIXO NO MENU ESQUERDO -->
+    <div id="cloudSyncBar" class="sidebar-cloud-box">
+      <div class="sidebar-cloud-status">
+        <span id="cloudStatusDot" style="width:9px;height:9px;border-radius:50%;background:#f0ad4e;display:inline-block;flex-shrink:0"></span>
+        <span id="cloudStatusText" style="line-height:1.2">Nuvem: Local</span>
+      </div>
+      <div class="sidebar-cloud-actions">
+        <button type="button" onclick="pullFromCloud(true)" class="btn secondary" title="Baixar dados da nuvem">⬇️ Baixar</button>
+        <button type="button" onclick="pushToCloud(true)" class="btn primary" title="Salvar dados na nuvem">⬆️ Salvar</button>
+        <button type="button" onclick="openCloudConfig()" class="btn btn-config">⚙️ Configurar Nuvem</button>
+      </div>
     </div>
   </aside>
 
@@ -557,15 +606,6 @@ tr.inline-edit-holder td {
       </div>
     </section>
   </main>
-</div>
-
-<!-- BARRA FLUTUANTE DE SINCRONIZAÇÃO NA NUVEM (GITHUB GIST) -->
-<div id="cloudSyncBar" style="position:fixed;bottom:14px;right:16px;background:#18232c;color:#fff;padding:10px 14px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,0.25);z-index:9000;display:flex;gap:8px;align-items:center;font-size:12.5px;border:1px solid #2e4150;flex-wrap:wrap">
-  <span id="cloudStatusDot" style="width:10px;height:10px;border-radius:50%;background:#f0ad4e;display:inline-block"></span>
-  <span id="cloudStatusText">Nuvem: Local</span>
-  <button type="button" onclick="pullFromCloud(true)" class="btn secondary" style="padding:5px 9px;font-size:12px" title="Baixar dados da nuvem">⬇️ Baixar</button>
-  <button type="button" onclick="pushToCloud(true)" class="btn primary" style="padding:5px 9px;font-size:12px" title="Salvar dados na nuvem">⬆️ Salvar</button>
-  <button type="button" onclick="openCloudConfig()" class="btn secondary" style="padding:5px 9px;font-size:12px">⚙️ Nuvem GitHub</button>
 </div>
 
 <!-- MODAL DE CONFIGURAÇÃO DA NUVEM GITHUB -->
