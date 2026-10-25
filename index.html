@@ -36,6 +36,7 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:12px 9px
     <button onclick="showPage('consent',this)">✅ Consentimento</button>
     <button onclick="showPage('sources',this)">📁 Grupos/Origens</button>
     <button onclick="showPage('history',this)">🕘 Histórico</button>
+    <button onclick="showPage('sentdb',this)">🗄️ Banco de enviados</button>
   </div>
 </aside>
 
@@ -88,6 +89,8 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:12px 9px
 <label>Público</label>
 <select id="campaignTag" style="width:100%;margin-bottom:15px" onchange="updateAudience()"><option value="">Todos os contatos</option></select>
 <div class="muted" id="audienceCount">0 contatos</div><br>
+<label>Nome da campanha (para consulta posterior)</label>
+<input id="campaignName" style="width:100%;margin-bottom:15px" placeholder="Ex.: Oferta de outubro">
 <label>Tipo de mensagem</label>
 <select id="campaignType" style="width:100%;margin-bottom:15px" onchange="updateCampaignType()">
 <option value="consent">Primeiro contato / pedir autorização</option>
@@ -134,6 +137,20 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:12px 9px
 <table><thead><tr><th>Contato</th><th>Origem</th><th>Status</th><th>Ações</th></tr></thead><tbody id="consentBody"></tbody></table>
 </div>
 </section>
+
+<section id="sentdb" class="page">
+<h1>Banco de contatos enviados</h1>
+<div class="subtitle">Consulte quem foi marcado como enviado, quando e em qual campanha.</div>
+<div class="panel">
+<div class="toolbar">
+<input id="sentSearch" class="search" placeholder="Pesquisar nome ou telefone..." oninput="renderSentDatabase()">
+<button class="btn secondary" onclick="exportSentDatabase()">Exportar banco CSV</button>
+<button class="btn danger" onclick="clearSentDatabase()">Limpar banco</button>
+</div>
+<div class="muted" id="sentDbCount" style="margin-bottom:10px">0 registros</div>
+<div style="overflow:auto"><table><thead><tr><th>Data/hora</th><th>Contato</th><th>WhatsApp</th><th>Campanha</th><th>Status</th></tr></thead><tbody id="sentDbBody"></tbody></table></div>
+</div>
+</section>
 <section id="history" class="page">
 <h1>Histórico</h1><div class="subtitle">Registro local das conversas abertas pelo CRM.</div>
 <div class="panel"><div style="overflow:auto"><table><thead><tr><th>Data</th><th>Contato</th><th>Mensagem</th></tr></thead><tbody id="historyBody"></tbody></table></div></div>
@@ -142,13 +159,14 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:12px 9px
 </div>
 
 <script>
-const KEY='crm_whatsapp_contacts_v1', HIST='crm_whatsapp_history_v1';
+const KEY='crm_whatsapp_contacts_v1', HIST='crm_whatsapp_history_v1', SENTKEY='crm_whatsapp_sent_database_v1';
 let contacts=JSON.parse(localStorage.getItem(KEY)||'[]').map(c=>({...c,source:c.source||'',consent:c.consent||'pending'}));
 let history=JSON.parse(localStorage.getItem(HIST)||'[]');
+let sentDatabase=JSON.parse(localStorage.getItem(SENTKEY)||'[]');
 let editingId=null, campaignQueue=[], queueIndex=0;
-let campaignProgress={active:false,items:[],currentIndex:0,openedId:null};
+let campaignProgress=JSON.parse(localStorage.getItem('crm_whatsapp_campaign_progress_v1')||'null')||{active:false,items:[],currentIndex:0,openedId:null};
 
-function saveData(){localStorage.setItem(KEY,JSON.stringify(contacts));localStorage.setItem(HIST,JSON.stringify(history));updateStats();populateTags();renderContacts();renderHistory();updateAudience();}
+function saveData(){localStorage.setItem(KEY,JSON.stringify(contacts));localStorage.setItem(HIST,JSON.stringify(history));localStorage.setItem(SENTKEY,JSON.stringify(sentDatabase));updateStats();populateTags();renderContacts();renderHistory();renderSentDatabase();updateAudience();}
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
 function normPhone(p){return String(p||'').replace(/\D/g,'');}
 function showPage(id,btn){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));btn.classList.add('active');}
@@ -177,7 +195,16 @@ function renderContacts(){
 function openContactForm(id=null){
  editingId=id;
  document.getElementById('contactForm').style.display='block';
- if(id){const c=contacts.find(x=>x.id===id);['name','phone','company','tag','source','note'].forEach(k=>document.getElementById('c'+k[0].toUpperCase()+k.slice(1)).value=c[k]||'');}
+ if(id){
+ const c=contacts.find(x=>String(x.id)===String(id));
+ if(!c){alert('Não encontrei esse contato para editar.');return}
+ document.getElementById('cName').value=c.name||'';
+ document.getElementById('cPhone').value=c.phone||'';
+ document.getElementById('cCompany').value=c.company||'';
+ document.getElementById('cTag').value=c.tag||'';
+ if(document.getElementById('cSource'))document.getElementById('cSource').value=c.source||'';
+ document.getElementById('cNote').value=c.note||'';
+}
  else ['cName','cPhone','cCompany','cTag','cSource','cNote'].forEach(x=>document.getElementById(x).value='');
 }
 function closeContactForm(){document.getElementById('contactForm').style.display='none';editingId=null;}
@@ -185,7 +212,15 @@ function saveContact(){
  const name=document.getElementById('cName').value.trim(),phone=normPhone(document.getElementById('cPhone').value);
  if(!name||phone.length<10){alert('Informe nome e um WhatsApp válido com DDI.');return}
  const data={name,phone,company:document.getElementById('cCompany').value.trim(),tag:document.getElementById('cTag').value.trim(),source:document.getElementById('cSource').value.trim(),note:document.getElementById('cNote').value.trim()};
- if(editingId){Object.assign(contacts.find(x=>x.id===editingId),data)}else{data.id=crypto.randomUUID();contacts.push(data)}
+ if(editingId){
+ const existing=contacts.find(x=>String(x.id)===String(editingId));
+ if(!existing){alert('Contato não encontrado. Atualize a página e tente novamente.');return}
+ Object.assign(existing,data);
+}else{
+ data.id=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():'c_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+ data.consent='pending';
+ contacts.push(data);
+}
  closeContactForm();saveData();
 }
 function editContact(id){openContactForm(id)}
@@ -293,6 +328,9 @@ function markCurrentSent(){
  if(!campaignProgress.openedId){alert('Inicie uma campanha e abra uma conversa primeiro.');return}
  const item=campaignProgress.items.find(x=>x.id===campaignProgress.openedId);if(!item)return;
  item.status='Enviado (confirmado manualmente)';campaignProgress.openedId=null;
+ const contact=contacts.find(c=>String(c.id)===String(item.id));
+ const campaignName=(document.getElementById('campaignName')?.value||'Campanha sem nome').trim();
+ sentDatabase.unshift({date:new Date().toLocaleString('pt-BR'),contact:item.name,phone:item.phone,campaign:campaignName,status:'Enviado (confirmado manualmente)',contactId:item.id});
  history.unshift({date:new Date().toLocaleString('pt-BR'),contact:item.name,message:'[ENVIO CONFIRMADO PELO USUÁRIO]'});
  saveData();renderProgress();openCurrentCampaignContact();
 }
@@ -306,11 +344,26 @@ function resetProgress(){
  campaignProgress={active:false,items:[],currentIndex:0,openedId:null};renderProgress();
 }
 function renderProgress(){
+ localStorage.setItem('crm_whatsapp_campaign_progress_v1',JSON.stringify(campaignProgress));
  const items=campaignProgress.items||[],sent=items.filter(x=>x.status==='Enviado (confirmado manualmente)').length,skipped=items.filter(x=>x.status==='Pulado').length,opened=items.filter(x=>x.status==='Conversa aberta').length,pending=items.filter(x=>x.status==='Pendente').length;
  const pct=items.length?Math.round((sent+skipped)/items.length*100):0;
  const summary=document.getElementById('progressSummary');if(summary)summary.textContent=items.length?`Total: ${items.length} · Enviados confirmados: ${sent} · Conversa aberta: ${opened} · Pulados: ${skipped} · Pendentes: ${pending}`:'Nenhuma campanha iniciada.';
  const bar=document.getElementById('progressBar');if(bar)bar.style.width=pct+'%';
 }
+function renderSentDatabase(){
+ const body=document.getElementById('sentDbBody');if(!body)return;
+ const q=(document.getElementById('sentSearch')?.value||'').toLowerCase();
+ const rows=sentDatabase.filter(x=>(x.contact+' '+x.phone+' '+x.campaign).toLowerCase().includes(q));
+ document.getElementById('sentDbCount').textContent=rows.length+' registro(s)';
+ body.innerHTML=rows.length?rows.map(x=>`<tr><td>${esc(x.date)}</td><td>${esc(x.contact)}</td><td>${esc(x.phone)}</td><td>${esc(x.campaign)}</td><td>${esc(x.status)}</td></tr>`).join(''):'<tr><td colspan="5" class="empty">Nenhum envio registrado.</td></tr>';
+}
+function exportSentDatabase(){
+ const rows=[['data_hora','contato','whatsapp','campanha','status','contact_id'],...sentDatabase.map(x=>[x.date,x.contact,x.phone,x.campaign,x.status,x.contactId])];
+ const csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download='banco_contatos_enviados.csv';a.click();
+}
+function clearSentDatabase(){if(confirm('Apagar todos os registros do banco de enviados? Esta ação não pode ser desfeita.')){sentDatabase=[];saveData();}}
+
 function renderHistory(){
  const b=document.getElementById('historyBody');b.innerHTML=history.length?history.slice(0,200).map(h=>`<tr><td>${esc(h.date)}</td><td>${esc(h.contact)}</td><td>${esc(h.message)}</td></tr>`).join(''):'<tr><td colspan="3" class="empty">Nenhuma ação registrada.</td></tr>';
 }
@@ -347,7 +400,7 @@ function downloadCSV(){
  const csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');
  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download='contatos_crm_whatsapp.csv';a.click();
 }
-saveData();renderSources();renderConsent();updateCampaignMode();updateCampaignType();updatePreview();renderProgress();
+saveData();renderSources();renderConsent();updateCampaignMode();updateCampaignType();updatePreview();renderProgress();renderSentDatabase();
 </script>
 </body>
 </html>
